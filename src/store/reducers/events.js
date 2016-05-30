@@ -1,5 +1,3 @@
-import itch from 'itch';
-
 // Events
 const INITIALIZE = 'tetris/events/INITIALIZE';
 const DROP = 'tetris/events/DROP';
@@ -21,41 +19,35 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action = {}) {
-   return itch(action.type)
-   .match(DROP).then({
-
-   })
-   .match(DEPLOY).then({
-      active: state.queue[0],
-      queue: [
-         ...state.queue.slice(1),
-         action.tetromino,
-      ],
-   })
-   .match(INITIALIZE).then({
-      ...state,
-      active: action.queue[0],
-      queue: action.queue.slice(1),
-   })
-   .match(FLIP).then({
-
-   })
-   .match(MOVE).then({
-
-   })
-   .match(HOLD).then({
-      ...state,
-      hold: state.active,
-      active: state.hold || state.queue[0],
-   })
-   .match(SEND_TO_BOTTOM).then({
-
-   })
-   .match(TOGGLE_DROP_SPEED).then({
-      ...state,
-      fastDrop: action.fastDrop,
-   })
-   .scratch(state);
+   const reducers = {
+      // [DROP]: () => ({}),
+      [DEPLOY]: () => ({
+         ...state,
+         active: state.queue[0],
+         queue: [
+            ...state.queue.slice(1),
+            action.tetromino,
+         ],
+      }),
+      [INITIALIZE]: () => ({
+         ...state,
+         active: action.queue[0],
+         queue: action.queue.slice(1),
+      }),
+      // [FLIP]: () => ({}),
+      // [MOVE]: () => ({}),
+      [HOLD]: () => ({
+         ...state,
+         hold: state.active,
+         active: state.hold || state.queue[0],
+      }),
+      // [SEND_TO_BOTTOM]: () => ({}),
+      [TOGGLE_DROP_SPEED]: () => ({
+         ...state,
+         fastDrop: action.fastDrop,
+      }),
+   };
+   return reducers[action.type] && reducers[action.type]() || state;
 }
 
 export const drop = () => dispatch => {
