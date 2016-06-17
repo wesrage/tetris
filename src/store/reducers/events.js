@@ -10,16 +10,24 @@ const HOLD = 'tetris/controls/HOLD';
 const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
 const TOGGLE_DROP_SPEED = 'tetris/controls/TOGGLE_DROP_SPEED';
 
+const height = 20;
+const width = 10;
+
+const emptyGrid = (h, w) =>
+   [...Array(h).keys()].map(() => (
+      [...Array(w).keys()].map(() => null)));
+
 const initialState = {
    active: null,
    fastDrop: false,
-   grid: [],
+   grid: emptyGrid(height, width),
    hold: null,
    queue: [],
 };
 
 export default function reducer(state = initialState, action = {}) {
-   const reducers = {
+   console.log('action:', action);
+   return ({
       // [DROP]: () => ({}),
       [DEPLOY]: () => ({
          ...state,
@@ -46,64 +54,49 @@ export default function reducer(state = initialState, action = {}) {
          ...state,
          fastDrop: action.fastDrop,
       }),
-   };
-   return reducers[action.type] && reducers[action.type]() || state;
+   }[action.type] || (() => state))();
 }
 
-export const drop = () => dispatch => {
-   dispatch({
-      type: DROP,
-   });
-};
+export const drop = () => ({
+   type: DROP,
+});
 
-export const deploy = tetromino => dispatch => {
-   dispatch({
-      type: DEPLOY,
-      tetromino,
-   });
-};
+export const deploy = tetromino => ({
+   type: DEPLOY,
+   tetromino,
+});
 
-export const initialize = queue => dispatch => {
-   dispatch({
-      type: INITIALIZE,
-      queue,
-   });
-};
+export const initialize = queue => ({
+   type: INITIALIZE,
+   queue,
+});
 
-export const flip = direction => dispatch => {
-   dispatch({
-      type: FLIP,
-      direction,
-   });
-};
+export const flip = direction => ({
+   type: FLIP,
+   direction,
+});
 
-export const move = direction => dispatch => {
-   dispatch({
-      type: MOVE,
-      direction,
-   });
-};
+export const move = direction => ({
+   type: MOVE,
+   direction,
+});
 
 export const hold = () => (dispatch, getState) => {
    const hasHoldPiece = !!getState().hold;
-   dispatch({
-      type: HOLD,
-   });
    if (!hasHoldPiece) {
       // TODO: Which tetromino should be enqueued?
       deploy(null);
    }
+   return {
+      type: HOLD,
+   };
 };
 
-export const sendToBottom = () => dispatch => {
-   dispatch({
-      type: SEND_TO_BOTTOM,
-   });
-};
+export const sendToBottom = () => ({
+   type: SEND_TO_BOTTOM,
+});
 
-export const toggleDropSpeed = fastDrop => dispatch => {
-   dispatch({
-      type: TOGGLE_DROP_SPEED,
-      fastDrop,
-   });
-};
+export const toggleDropSpeed = fastDrop => ({
+   type: TOGGLE_DROP_SPEED,
+   fastDrop,
+});

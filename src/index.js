@@ -10,7 +10,11 @@ import reducers from './store/reducers';
 
 const target = document.getElementById('root');
 
-const store = createStore(reducers);
+const store = createStore(
+   reducers,
+   undefined,
+   window.devToolsExtension && window.devToolsExtension()
+);
 
 const component = (
    <Provider store={store}>
