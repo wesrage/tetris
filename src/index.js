@@ -1,19 +1,25 @@
 require('./index.html');
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 
 import routes from './routes';
 import reducers from './store/reducers';
 
+import './style/blocks.scss';
+
 const target = document.getElementById('root');
 
 const store = createStore(
    reducers,
    undefined,
-   window.devToolsExtension && window.devToolsExtension()
+   compose(
+      applyMiddleware(thunkMiddleware),
+      window.devToolsExtension && window.devToolsExtension()
+   )
 );
 
 const component = (

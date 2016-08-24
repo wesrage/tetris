@@ -1,0 +1,25 @@
+.unit-block {
+   border: 1px solid rgba(255, 255, 255, 0.5);
+   display: inline-block;
+}
+
+
+// TETROMINO
+.tetromino {
+   background-color: red;
+   height: 20px;
+   top: 0;
+   left: 0;
+   position: absolute;
+   width: 20px;
+}
+
+
+
+// MATRIX
+.matrix {
+   background-color: #222;
+   border: 10px solid #aaa;
+   display: inline-block;
+   position: relative;
+}

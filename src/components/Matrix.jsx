@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react';
 import UnitBlock from './UnitBlock';
 
-const blockSize = 30;
-
-const MatrixRow = ({ cells, key }) => (
-   <div style={{ height: blockSize }}>
+const MatrixRow = ({ cells, rowIndex }) => (
+   <div>
       {cells.map((cell, index) => (
          <UnitBlock
-            key={`${key},${index}`}
+            key={`${rowIndex},${index}`}
             filled={!!cell}
             color={cell}
-            size={blockSize}
          />
       ))}
    </div>
@@ -18,20 +15,15 @@ const MatrixRow = ({ cells, key }) => (
 
 MatrixRow.propTypes = {
    cells: PropTypes.arrayOf(PropTypes.string),
+   rowIndex: PropTypes.number,
 };
 
-
-const matrixStyle = {
-   backgroundColor: '#222',
-   border: '10px solid #aaa',
-   display: 'inline-block',
-};
-
-const Matrix = ({ grid }) => (
-   <div style={matrixStyle}>
+const Matrix = ({ grid, children }) => (
+   <div className="matrix">
       {grid.map((cells, index) => (
-         <MatrixRow key={index} cells={cells}/>
+         <MatrixRow key={index} rowIndex={index} cells={cells}/>
       ))}
+      {children}
    </div>
 );
 
@@ -39,6 +31,7 @@ Matrix.propTypes = {
    grid: PropTypes.arrayOf(PropTypes.arrayOf(
       PropTypes.string,
    )),
+   children: PropTypes.element,
 };
 
 Matrix.defaultProps = {

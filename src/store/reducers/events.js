@@ -1,17 +1,22 @@
+import { generateBag } from '../../util/RandomGenerator';
+import { calculateTetrominoWidth } from '../../components/Tetromino';
+import clamp from 'clamp';
+
 // Events
 const INITIALIZE = 'tetris/events/INITIALIZE';
 const DROP = 'tetris/events/DROP';
 const DEPLOY = 'tetris/events/DEPLOY';
 
 // Controls
-const FLIP = 'tetris/controls/FLIP';
 const MOVE = 'tetris/controls/MOVE';
 const HOLD = 'tetris/controls/HOLD';
+const ROTATE = 'tetris/controls/ROTATE';
 const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
 const TOGGLE_DROP_SPEED = 'tetris/controls/TOGGLE_DROP_SPEED';
 
-const height = 20;
-const width = 10;
+const HEIGHT = 20;
+const WIDTH = 10;
+const QUEUE_SIZE = 4;
 
 const emptyGrid = (h, w) =>
    [...Array(h).keys()].map(() => (
@@ -20,60 +25,94 @@ const emptyGrid = (h, w) =>
 const initialState = {
    active: null,
    fastDrop: false,
-   grid: emptyGrid(height, width),
+   grid: emptyGrid(HEIGHT, WIDTH),
    hold: null,
    queue: [],
 };
 
 export default function reducer(state = initialState, action = {}) {
    console.log('action:', action);
-   return ({
-      // [DROP]: () => ({}),
-      [DEPLOY]: () => ({
+   switch (action.type) {
+      case DROP: return {
          ...state,
-         active: state.queue[0],
+         active: {
+            ...state.active,
+            position: [
+               state.active.position[0],
+               state.active.position[1] + 1,
+            ],
+         },
+      };
+      case DEPLOY: return {
+         ...state,
+         active: {
+            type: state.queue[0],
+            position: [0, 0],
+         },
          queue: [
             ...state.queue.slice(1),
-            action.tetromino,
+            ...action.bag,
          ],
-      }),
-      [INITIALIZE]: () => ({
-         ...state,
-         active: action.queue[0],
-         queue: action.queue.slice(1),
-      }),
-      // [FLIP]: () => ({}),
-      // [MOVE]: () => ({}),
-      [HOLD]: () => ({
+      };
+      case HOLD: return {
          ...state,
          hold: state.active,
          active: state.hold || state.queue[0],
-      }),
-      // [SEND_TO_BOTTOM]: () => ({}),
-      [TOGGLE_DROP_SPEED]: () => ({
+      };
+      // case INITIALIZE: return state;
+      case MOVE: {
+         const delta = (action.direction ? 1 : -1);
+         const prevX = state.active.position[0];
+         const maxX = WIDTH - calculateTetrominoWidth(state.active);
+         const x = clamp(prevX + delta, 0, maxX);
+         return {
+            ...state,
+            active: {
+               ...state.active,
+               position: [x, state.active.position[1]],
+            },
+         };
+      }
+      case ROTATE: return {
+         ...state,
+         active: {
+            ...state.active,
+            rotation: ((action.direction)
+               ? state.active.rotation + 1
+               : state.active.rotation - 1
+            ) % 4,
+         },
+      };
+      // case SEND_TO_BOTTOM: return state;
+      case TOGGLE_DROP_SPEED: return {
          ...state,
          fastDrop: action.fastDrop,
-      }),
-   }[action.type] || (() => state))();
+      };
+      default: return state;
+   }
 }
 
 export const drop = () => ({
    type: DROP,
 });
 
-export const deploy = tetromino => ({
-   type: DEPLOY,
-   tetromino,
-});
+export const deploy = () => (dispatch, getState) => {
+   const bag = (getState().queue.length < QUEUE_SIZE)
+      ? generateBag()
+      : [];
+   dispatch({
+      type: DEPLOY,
+      bag,
+   });
+};
 
-export const initialize = queue => ({
+export const initialize = () => ({
    type: INITIALIZE,
-   queue,
 });
 
-export const flip = direction => ({
-   type: FLIP,
-   direction,
+export const rotate = counterClockwise => ({
+   type: ROTATE,
+   counterClockwise: !!counterClockwise,
 });
 
 export const move = direction => ({
@@ -84,12 +123,11 @@ export const move = direction => ({
 export const hold = () => (dispatch, getState) => {
    const hasHoldPiece = !!getState().hold;
    if (!hasHoldPiece) {
-      // TODO: Which tetromino should be enqueued?
-      deploy(null);
+      deploy();
    }
-   return {
+   dispatch({
       type: HOLD,
-   };
+   });
 };
 
 export const sendToBottom = () => ({

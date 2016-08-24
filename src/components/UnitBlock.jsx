@@ -1,25 +1,28 @@
 import React, { PropTypes } from 'react';
 
-const style = {
-   border: '1px solid rgba(255, 255, 255, 0.5)',
-   display: 'inline-block',
-};
+const BLOCK_SIZE = 30;
 
-const UnitBlock = ({ filled, color, size }) => (
+const UnitBlock = ({ absolute = false, color, filled = true, x, y }) => (
    <div style={{
-      ...style,
       backgroundColor: color,
-      height: size,
-      width: size,
+      height: BLOCK_SIZE,
+      left: x ? x * BLOCK_SIZE : 0,
+      position: absolute ? 'absolute' : 'static',
+      top: y ? y * BLOCK_SIZE : 0,
       visibility: filled ? 'visible' : 'hidden',
-   }} className="unit-block"
+      width: 30,
+   }}
+      className="unit-block"
    />
 );
 
 UnitBlock.propTypes = {
+   absolute: PropTypes.bool,
    color: PropTypes.string,
-   filled: PropTypes.bool.isRequired,
-   size: PropTypes.number.isRequired,
+   filled: PropTypes.bool,
+   style: PropTypes.object,
+   x: PropTypes.number,
+   y: PropTypes.number,
 };
 
 export default UnitBlock;
