@@ -11,7 +11,7 @@ const Tetromino = ({ type, rotation, position }) => (
    }}
       className="tetromino"
    >
-      {getBlockPositions(type, rotation).map((blockPosition, index) => (
+      {blockPositionMap[type][rotation].map((blockPosition, index) => (
          <TetrominoBlock
             key={`active-block-${index}`}
             color={getColor(type)}
@@ -21,31 +21,57 @@ const Tetromino = ({ type, rotation, position }) => (
    </div>
 );
 
-function getBlockPositions(type, rotation) {
-   switch (type) {
-      case 'I':
-         if (rotation % 2) {
-            return [[0, 0], [0, 1], [0, 2], [0, 3]];
-         }
-         return [[0, 0], [1, 0], [2, 0], [3, 0]];
-      case 'J':
-      case 'L':
-      case 'O':
-         return [[0, 0], [0, 1], [1, 0], [1, 1]];
-      case 'S':
-      case 'T':
-      case 'Z':
-      default:
-         return [[0, 0], [0, 1], [1, 0], [1, 1]];
-   }
-}
+const blockPositionMap = {
+   I: [
+      [[0, 1], [1, 1], [2, 1], [3, 1]],
+      [[2, 0], [2, 1], [2, 2], [2, 3]],
+      [[0, 2], [1, 2], [2, 2], [3, 2]],
+      [[1, 0], [1, 1], [1, 2], [1, 3]],
+   ],
+   J: [
+      [[0, 0], [0, 1], [1, 1], [2, 1]],
+      [[1, 0], [2, 0], [1, 1], [1, 2]],
+      [[0, 1], [1, 1], [2, 1], [2, 2]],
+      [[1, 0], [1, 1], [1, 2], [0, 2]],
+   ],
+   L: [
+      [[0, 1], [1, 1], [2, 1], [2, 0]],
+      [[1, 0], [1, 1], [1, 2], [2, 2]],
+      [[0, 1], [1, 1], [2, 1], [0, 2]],
+      [[0, 0], [1, 0], [1, 1], [1, 2]],
+   ],
+   O: [
+      [[1, 0], [2, 0], [1, 1], [2, 1]],
+      [[1, 0], [2, 0], [1, 1], [2, 1]],
+      [[1, 0], [2, 0], [1, 1], [2, 1]],
+      [[1, 0], [2, 0], [1, 1], [2, 1]],
+   ],
+   S: [
+      [[1, 0], [2, 0], [0, 1], [1, 1]],
+      [[1, 0], [1, 1], [2, 1], [2, 2]],
+      [[1, 1], [2, 1], [0, 2], [1, 2]],
+      [[0, 0], [0, 1], [1, 1], [1, 2]],
+   ],
+   T: [
+      [[1, 0], [0, 1], [1, 1], [2, 1]],
+      [[1, 0], [1, 1], [2, 1], [1, 2]],
+      [[0, 1], [1, 1], [2, 1], [1, 2]],
+      [[1, 0], [0, 1], [1, 1], [1, 2]],
+   ],
+   Z: [
+      [[0, 0], [1, 0], [1, 1], [1, 2]],
+      [[2, 0], [1, 1], [1, 2], [2, 1]],
+      [[1, 0], [1, 1], [2, 1], [2, 2]],
+      [[0, 1], [1, 0], [1, 1], [2, 0]],
+   ],
+};
 
 function getColor(type) {
    return 'red';
 }
 
 export function calculateTetrominoWidth(tetromino) {
-   const blockPositions = getBlockPositions(tetromino.type, tetromino.rotation);
+   const blockPositions = blockPositionMap[tetromino.type][tetromino.rotation];
    const xPositions = blockPositions.map(position => position[0]);
    return Math.max.apply(0, xPositions);
 }

@@ -14,7 +14,7 @@ const ROTATE = 'tetris/controls/ROTATE';
 const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
 const TOGGLE_DROP_SPEED = 'tetris/controls/TOGGLE_DROP_SPEED';
 
-const HEIGHT = 20;
+const HEIGHT = 22;
 const WIDTH = 10;
 const QUEUE_SIZE = 4;
 
@@ -39,15 +39,16 @@ export default function reducer(state = initialState, action = {}) {
             ...state.active,
             position: [
                state.active.position[0],
-               state.active.position[1] + 1,
+               Math.min(state.active.position[1] + 1, HEIGHT),
             ],
          },
       };
       case DEPLOY: return {
          ...state,
          active: {
+            position: [3, 0],
+            rotation: 0,
             type: state.queue[0],
-            position: [0, 0],
          },
          queue: [
             ...state.queue.slice(1),
@@ -59,7 +60,10 @@ export default function reducer(state = initialState, action = {}) {
          hold: state.active,
          active: state.hold || state.queue[0],
       };
-      // case INITIALIZE: return state;
+      case INITIALIZE: return {
+         ...state,
+         queue: action.bag,
+      };
       case MOVE: {
          const delta = (action.direction ? 1 : -1);
          const prevX = state.active.position[0];
@@ -79,7 +83,7 @@ export default function reducer(state = initialState, action = {}) {
             ...state.active,
             rotation: ((action.direction)
                ? state.active.rotation + 1
-               : state.active.rotation - 1
+               : state.active.rotation + 3
             ) % 4,
          },
       };
@@ -108,6 +112,7 @@ export const deploy = () => (dispatch, getState) => {
 
 export const initialize = () => ({
    type: INITIALIZE,
+   bag: generateBag(),
 });
 
 export const rotate = counterClockwise => ({

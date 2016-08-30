@@ -10,14 +10,14 @@ export default class KeyboardInput extends Component {
    }
 
    componentDidMount() {
-      document.addEventListener('keydown', this.handleKeyDown);
+      document.addEventListener('keyup', this.handleKeyUp);
    }
 
    componentWillUnmount() {
-      document.removeEventListener('keydown', this.handleKeyDown);
+      document.removeEventListener('keyup', this.handleKeyUp);
    }
 
-   handleKeyDown = e => {
+   handleKeyUp = e => {
       if (e.key in this.props.mappings) {
          e.preventDefault();
          this.props.mappings[e.key]();

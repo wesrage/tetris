@@ -15,7 +15,9 @@ class Game extends Component {
       events: PropTypes.shape({
          deploy: PropTypes.func.isRequired,
          drop: PropTypes.func.isRequired,
+         initialize: PropTypes.func.isRequired,
          move: PropTypes.func.isRequired,
+         rotate: PropTypes.func.isRequired,
       }).isRequired,
    }
 
@@ -23,8 +25,8 @@ class Game extends Component {
       grid: [],
    }
 
-
    componentDidMount() {
+      this.props.events.initialize();
       this.props.events.deploy();
       setInterval(this.props.events.drop, 1000);
    }
@@ -32,6 +34,8 @@ class Game extends Component {
    keyMappings = {
       ArrowLeft: this.props.events.move.bind(this, false),
       ArrowRight: this.props.events.move.bind(this, true),
+      Control: this.props.events.rotate.bind(this, false),
+      ' ': this.props.events.rotate.bind(this, true),
    };
 
    render() {
@@ -41,7 +45,7 @@ class Game extends Component {
             <KeyboardInput mappings={this.keyMappings}/>
             <Matrix grid={this.props.grid}>
                 {this.props.piece &&
-                   <Tetromino type="I" position={this.props.piece.position}/>
+                   <Tetromino {...this.props.piece}/>
                 }
             </Matrix>
          </div>

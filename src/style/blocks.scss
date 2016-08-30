@@ -3,20 +3,10 @@
    display: inline-block;
 }
 
-
-// TETROMINO
 .tetromino {
-   background-color: red;
-   height: 20px;
-   top: 0;
-   left: 0;
    position: absolute;
-   width: 20px;
 }
 
-
-
-// MATRIX
 .matrix {
    background-color: #222;
    border: 10px solid #aaa;

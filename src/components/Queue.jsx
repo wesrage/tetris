@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const Queue = ({  }) => (
+const Queue = ({ queue }) => (
 
 );
 
