@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
+import cx from 'classnames';
+import { BLOCK_SIZE } from '../constants';
 
-const BLOCK_SIZE = 30;
-
-const UnitBlock = ({ absolute = false, color, filled = true, x, y }) => (
+const UnitBlock = ({ absolute = false, filled = true, type, x, y }) => (
    <div style={{
-      backgroundColor: color,
       height: BLOCK_SIZE,
       left: x ? x * BLOCK_SIZE : 0,
       position: absolute ? 'absolute' : 'static',
@@ -12,7 +11,9 @@ const UnitBlock = ({ absolute = false, color, filled = true, x, y }) => (
       visibility: filled ? 'visible' : 'hidden',
       width: 30,
    }}
-      className="unit-block"
+      className={cx('unit-block', {
+         [`unit-block--${type}`]: type !== undefined,
+      })}
    />
 );
 
@@ -21,6 +22,7 @@ UnitBlock.propTypes = {
    color: PropTypes.string,
    filled: PropTypes.bool,
    style: PropTypes.object,
+   type: PropTypes.string,
    x: PropTypes.number,
    y: PropTypes.number,
 };

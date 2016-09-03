@@ -1,18 +1,18 @@
 import { generateBag } from '../../util/RandomGenerator';
-import { calculateTetrominoWidth } from '../../components/Tetromino';
-import clamp from 'clamp';
+import { getGridPositions } from '../../components/Tetromino';
 
 // Events
 const INITIALIZE = 'tetris/events/INITIALIZE';
 const DROP = 'tetris/events/DROP';
 const DEPLOY = 'tetris/events/DEPLOY';
+const LOCK = 'tetris/events/LOCK';
 
 // Controls
 const MOVE = 'tetris/controls/MOVE';
 const HOLD = 'tetris/controls/HOLD';
 const ROTATE = 'tetris/controls/ROTATE';
 const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
-const TOGGLE_DROP_SPEED = 'tetris/controls/TOGGLE_DROP_SPEED';
+const SET_FAST_DROP = 'tetris/controls/SET_FAST_DROP';
 
 const HEIGHT = 22;
 const WIDTH = 10;
@@ -24,25 +24,26 @@ const emptyGrid = (h, w) =>
 
 const initialState = {
    active: null,
+   dropInterval: 1000,
    fastDrop: false,
    grid: emptyGrid(HEIGHT, WIDTH),
    hold: null,
+   paused: false,
    queue: [],
 };
 
 export default function reducer(state = initialState, action = {}) {
-   console.log('action:', action);
    switch (action.type) {
-      case DROP: return {
-         ...state,
-         active: {
-            ...state.active,
-            position: [
-               state.active.position[0],
-               Math.min(state.active.position[1] + 1, HEIGHT),
-            ],
-         },
-      };
+      case DROP: {
+         const [x, y] = state.active.position;
+         return {
+            ...state,
+            active: {
+               ...state.active,
+               position: [x, y + 1],
+            },
+         };
+      }
       case DEPLOY: return {
          ...state,
          active: {
@@ -52,7 +53,7 @@ export default function reducer(state = initialState, action = {}) {
          },
          queue: [
             ...state.queue.slice(1),
-            ...action.bag,
+            ...(action.bag || []),
          ],
       };
       case HOLD: return {
@@ -64,31 +65,41 @@ export default function reducer(state = initialState, action = {}) {
          ...state,
          queue: action.bag,
       };
+      case LOCK: return {
+         ...state,
+         grid: merge({
+            grid: state.grid,
+            piece: state.active,
+            type: state.active.type,
+         }),
+      };
       case MOVE: {
-         const delta = (action.direction ? 1 : -1);
-         const prevX = state.active.position[0];
-         const maxX = WIDTH - calculateTetrominoWidth(state.active);
-         const x = clamp(prevX + delta, 0, maxX);
+         const delta = (action.direction) ? 1 : -1;
+         const [x, y] = state.active.position;
          return {
             ...state,
             active: {
                ...state.active,
-               position: [x, state.active.position[1]],
+               position: [x + delta, y],
             },
          };
       }
+      // case TOGGLE_PAUSE: return {
+      //    ...state,
+      //    paused: !!state.paused,
+      // };
       case ROTATE: return {
          ...state,
          active: {
             ...state.active,
-            rotation: ((action.direction)
+            rotation: ((action.counterClockwise)
                ? state.active.rotation + 1
                : state.active.rotation + 3
             ) % 4,
          },
       };
       // case SEND_TO_BOTTOM: return state;
-      case TOGGLE_DROP_SPEED: return {
+      case SET_FAST_DROP: return {
          ...state,
          fastDrop: action.fastDrop,
       };
@@ -96,18 +107,21 @@ export default function reducer(state = initialState, action = {}) {
    }
 }
 
-export const drop = () => ({
-   type: DROP,
-});
-
 export const deploy = () => (dispatch, getState) => {
    const bag = (getState().queue.length < QUEUE_SIZE)
       ? generateBag()
       : [];
-   dispatch({
-      type: DEPLOY,
-      bag,
-   });
+   dispatch({ type: DEPLOY, bag });
+};
+
+export const drop = () => (dispatch, getState) => {
+   const { active, grid } = getState();
+   if (isLegalDrop(active, grid)) {
+      dispatch({ type: DROP });
+   } else {
+      dispatch({ type: LOCK });
+      dispatch(deploy());
+   }
 };
 
 export const initialize = () => ({
@@ -120,26 +134,52 @@ export const rotate = counterClockwise => ({
    counterClockwise: !!counterClockwise,
 });
 
-export const move = direction => ({
-   type: MOVE,
-   direction,
-});
+export const move = direction => (dispatch, getState) => {
+   const { active, grid } = getState();
+   if (isLegalMove(active, grid, direction)) {
+      dispatch({
+         type: MOVE,
+         direction,
+      });
+   }
+};
 
 export const hold = () => (dispatch, getState) => {
    const hasHoldPiece = !!getState().hold;
    if (!hasHoldPiece) {
-      deploy();
+      dispatch(deploy());
    }
-   dispatch({
-      type: HOLD,
-   });
+   dispatch({ type: HOLD });
 };
 
 export const sendToBottom = () => ({
    type: SEND_TO_BOTTOM,
 });
 
-export const toggleDropSpeed = fastDrop => ({
-   type: TOGGLE_DROP_SPEED,
+export const setFastDrop = fastDrop => ({
+   type: SET_FAST_DROP,
    fastDrop,
 });
+
+function merge({ grid, piece, type }) {
+   const result = JSON.parse(JSON.stringify(grid));
+   getGridPositions(piece).forEach(([x, y]) => {
+      result[y][x] = type;
+   });
+   return result;
+}
+
+function isLegalMove(tetromino, grid, direction) {
+   const delta = (direction) ? 1 : -1;
+   const gridPositions = getGridPositions(tetromino);
+   const nextGridPositions = gridPositions.map(([x, y]) => [x + delta, y]);
+   return nextGridPositions.every(([x, y]) =>
+      (x >= 0 && x < WIDTH && grid[y][x] === null));
+}
+
+function isLegalDrop(tetromino, grid) {
+   const gridPositions = getGridPositions(tetromino);
+   const nextGridPositions = gridPositions.map(([x, y]) => [x, y + 1]);
+   return nextGridPositions.every(([x, y]) =>
+      (y < HEIGHT && grid[y][x] === null));
+}

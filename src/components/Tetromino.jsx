@@ -1,20 +1,20 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import TetrominoBlock from './TetrominoBlock';
-import { tetrominoTypes } from '../types';
-
-const BLOCK_SIZE = 30;
+import { TetrominoType } from '../types';
+import { BLOCK_SIZE } from '../constants';
 
 const Tetromino = ({ type, rotation, position }) => (
-   <div style={{
-      left: position[0] * BLOCK_SIZE,
-      top: position[1] * BLOCK_SIZE,
-   }}
+   <div
       className="tetromino"
+      style={{
+         left: position[0] * BLOCK_SIZE,
+         top: position[1] * BLOCK_SIZE,
+      }}
    >
       {blockPositionMap[type][rotation].map((blockPosition, index) => (
          <TetrominoBlock
             key={`active-block-${index}`}
-            color={getColor(type)}
+            type={type}
             position={blockPosition}
          />
       ))}
@@ -59,29 +59,19 @@ const blockPositionMap = {
       [[1, 0], [0, 1], [1, 1], [1, 2]],
    ],
    Z: [
-      [[0, 0], [1, 0], [1, 1], [1, 2]],
+      [[0, 0], [1, 0], [1, 1], [2, 1]],
       [[2, 0], [1, 1], [1, 2], [2, 1]],
-      [[1, 0], [1, 1], [2, 1], [2, 2]],
-      [[0, 1], [1, 0], [1, 1], [2, 0]],
+      [[0, 1], [1, 1], [1, 2], [2, 2]],
+      [[1, 0], [1, 1], [0, 1], [0, 2]],
    ],
 };
 
-function getColor(type) {
-   return 'red';
-}
-
-export function calculateTetrominoWidth(tetromino) {
+export function getGridPositions(tetromino) {
    const blockPositions = blockPositionMap[tetromino.type][tetromino.rotation];
-   const xPositions = blockPositions.map(position => position[0]);
-   return Math.max.apply(0, xPositions);
+   return blockPositions.map(position =>
+      position.map((value, index) => value + tetromino.position[index]));
 }
 
-// const Tetrominos = [I, J, L, O, S, T, Z];
-
-Tetromino.propTypes = {
-   type: PropTypes.oneOf(tetrominoTypes),
-   position: PropTypes.arrayOf(PropTypes.number).isRequired,
-   rotation: PropTypes.oneOf([0, 1, 2, 3]),
-};
+Tetromino.propTypes = TetrominoType;
 
 export default Tetromino;

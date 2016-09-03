@@ -1,6 +1,13 @@
 .unit-block {
-   border: 1px solid rgba(255, 255, 255, 0.5);
    display: inline-block;
+
+   &.unit-block--I { background-color: cyan; }
+   &.unit-block--J { background-color: blue; }
+   &.unit-block--L { background-color: orange; }
+   &.unit-block--O { background-color: yellow; }
+   &.unit-block--S { background-color: green; }
+   &.unit-block--T { background-color: purple; }
+   &.unit-block--Z { background-color: red; }
 }
 
 .tetromino {

@@ -1,20 +1,5 @@
 const PIECE_TYPES = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
 
-// export default class RandomGenerator {
-//    currentBag = [];
-//
-//    constructor({ queueSize }) {
-//       this.queueSize = queueSize;
-//    }
-//
-//    readQueue() {
-//       if (this.currentBag.length < this.queueSize) {
-//          this.currentBag.concat(generateBag());
-//       }
-//       return this.currentBag.slice(this.queueSize);
-//    }
-// }
-
 export function generateBag() {
    return shuffle(PIECE_TYPES);
 }

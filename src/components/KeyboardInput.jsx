@@ -9,18 +9,41 @@ export default class KeyboardInput extends Component {
       mappings: {},
    }
 
+   state = {
+      pressed: {},
+   };
+
    componentDidMount() {
+      document.addEventListener('keydown', this.handleKeyDown);
       document.addEventListener('keyup', this.handleKeyUp);
    }
 
    componentWillUnmount() {
-      document.removeEventListener('keyup', this.handleKeyUp);
+      document.removeEventListener('keydown', this.handleKeyDown);
+      document.removeEventListener('keyup', this.handleKey);
+   }
+
+   handleKeyDown = e => {
+      const mappings = this.props.mappings.keyDown;
+      if (e.key in mappings) {
+         e.preventDefault();
+         if (!this.state.pressed[e.key]) {
+            this.setState({
+               pressed: { [e.key]: true },
+            });
+            mappings[e.key]();
+         }
+      }
    }
 
    handleKeyUp = e => {
-      if (e.key in this.props.mappings) {
+      const mappings = this.props.mappings.keyUp;
+      this.setState({
+         pressed: { [e.key]: undefined },
+      });
+      if (e.key in mappings) {
          e.preventDefault();
-         this.props.mappings[e.key]();
+         mappings[e.key]();
       }
    }
 

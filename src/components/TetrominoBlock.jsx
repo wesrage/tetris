@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import UnitBlock from './UnitBlock';
+import { TetrominoType } from '../types';
 
-const TetrominoBlock = ({ color, position }) => (
+const TetrominoBlock = ({ type, position }) => (
    <UnitBlock
       absolute
-      color={color}
+      type={type}
       filled
       x={position[0]}
       y={position[1]}
@@ -12,8 +13,8 @@ const TetrominoBlock = ({ color, position }) => (
 );
 
 TetrominoBlock.propTypes = {
-   color: PropTypes.string,
    position: PropTypes.arrayOf(PropTypes.number),
+   type: TetrominoType.type,
 };
 
 export default TetrominoBlock;
