@@ -1,6 +1,5 @@
 import { generateBag } from '../util/RandomGenerator';
 import { getGridPositions } from '../components/Tetromino';
-
 import {
    INITIALIZE,
    DROP,
@@ -11,13 +10,15 @@ import {
    ROTATE,
    SEND_TO_BOTTOM,
    SET_FAST_DROP,
+} from './types';
+import {
    HEIGHT,
    WIDTH,
    QUEUE_SIZE,
-} from './constants';
+} from '../constants';
 
 export const deploy = () => (dispatch, getState) => {
-   const bag = (getState().queue.length < QUEUE_SIZE)
+   const bag = (getState().queue.length <= QUEUE_SIZE)
       ? generateBag()
       : [];
    dispatch({ type: DEPLOY, bag });
@@ -43,12 +44,12 @@ export const rotate = counterClockwise => ({
    counterClockwise: !!counterClockwise,
 });
 
-export const move = direction => (dispatch, getState) => {
+export const move = right => (dispatch, getState) => {
    const { active, grid } = getState();
-   if (isLegalMove(active, grid, direction)) {
+   if (isLegalMove(active, grid, right)) {
       dispatch({
          type: MOVE,
-         direction,
+         right,
       });
    }
 };
@@ -70,8 +71,8 @@ export const setFastDrop = fastDrop => ({
    fastDrop,
 });
 
-function isLegalMove(tetromino, grid, direction) {
-   const delta = (direction) ? 1 : -1;
+function isLegalMove(tetromino, grid, right) {
+   const delta = (right) ? 1 : -1;
    const gridPositions = getGridPositions(tetromino);
    const nextGridPositions = gridPositions.map(([x, y]) => [x + delta, y]);
    return nextGridPositions.every(([x, y]) =>

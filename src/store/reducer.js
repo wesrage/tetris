@@ -8,11 +8,13 @@ import {
    HOLD,
    ROTATE,
    SET_FAST_DROP,
+} from './types';
+import {
    HEIGHT,
    WIDTH,
-} from './constants';
+} from '../constants';
 
-const emptyGrid = (h, w) =>
+export const emptyGrid = (h, w) =>
    [...Array(h).keys()].map(() => (
       [...Array(w).keys()].map(() => null)));
 
@@ -52,8 +54,12 @@ export default function reducer(state = initialState, action = {}) {
       };
       case HOLD: return {
          ...state,
-         hold: state.active,
-         active: state.hold || state.queue[0],
+         hold: state.active.type,
+         active: {
+            type: state.hold || state.queue[0],
+            position: [3, 0],
+            rotation: 0,
+         },
       };
       case INITIALIZE: return {
          ...state,
@@ -68,7 +74,7 @@ export default function reducer(state = initialState, action = {}) {
          }),
       };
       case MOVE: {
-         const delta = (action.direction) ? 1 : -1;
+         const delta = (action.right) ? 1 : -1;
          const [x, y] = state.active.position;
          return {
             ...state,
