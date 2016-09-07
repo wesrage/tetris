@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import reducers from './store/reducers';
+import reducer from './store/reducer';
 
 export default function configureStore(initialState) {
    const store = createStore(
-      reducers,
+      reducer,
       initialState,
       compose(
          applyMiddleware(thunkMiddleware),
@@ -14,7 +14,7 @@ export default function configureStore(initialState) {
 
    if (module.hot) {
       module.hot.accept(() => {
-         const nextRootReducer = require('./store/reducers/index').default;
+         const nextRootReducer = require('./store/reducer').default;
          store.replaceReducer(nextRootReducer);
       });
    }

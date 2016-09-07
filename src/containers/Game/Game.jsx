@@ -8,7 +8,7 @@ import {
    Matrix,
    Tetromino,
 } from '../../components';
-import * as events from '../../store/reducers/events';
+import * as events from '../../store/actionCreators';
 import { TetrominoType } from '../../types';
 import { FAST_DROP_INTERVAL } from '../../constants';
 
