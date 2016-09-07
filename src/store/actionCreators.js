@@ -1,6 +1,5 @@
 import { generateBag } from '../util/RandomGenerator';
 import { getGridPositions } from '../components/Tetromino';
-
 import {
    INITIALIZE,
    DROP,
@@ -11,13 +10,15 @@ import {
    ROTATE,
    SEND_TO_BOTTOM,
    SET_FAST_DROP,
+} from './types';
+import {
    HEIGHT,
    WIDTH,
    QUEUE_SIZE,
-} from './constants';
+} from '../constants';
 
 export const deploy = () => (dispatch, getState) => {
-   const bag = (getState().queue.length < QUEUE_SIZE)
+   const bag = (getState().queue.length <= QUEUE_SIZE)
       ? generateBag()
       : [];
    dispatch({ type: DEPLOY, bag });

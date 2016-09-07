@@ -8,11 +8,13 @@ import {
    HOLD,
    ROTATE,
    SET_FAST_DROP,
+} from './types';
+import {
    HEIGHT,
    WIDTH,
-} from './constants';
+} from '../constants';
 
-const emptyGrid = (h, w) =>
+export const emptyGrid = (h, w) =>
    [...Array(h).keys()].map(() => (
       [...Array(w).keys()].map(() => null)));
 
