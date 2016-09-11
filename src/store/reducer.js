@@ -3,6 +3,7 @@ import {
    INITIALIZE,
    DROP,
    DEPLOY,
+   GAME_OVER,
    LOCK,
    MOVE,
    HOLD,
@@ -22,6 +23,7 @@ const initialState = {
    active: null,
    dropInterval: 1000,
    fastDrop: false,
+   gameOver: false,
    grid: emptyGrid(HEIGHT, WIDTH),
    hold: null,
    paused: false,
@@ -42,24 +44,20 @@ export default function reducer(state = initialState, action = {}) {
       }
       case DEPLOY: return {
          ...state,
-         active: {
-            position: [3, 0],
-            rotation: 0,
-            type: state.queue[0],
-         },
+         active: createTetrominoForDeployment(state.queue[0]),
          queue: [
             ...state.queue.slice(1),
             ...(action.bag || []),
          ],
       };
+      case GAME_OVER: return {
+         ...state,
+         gameOver: true,
+      };
       case HOLD: return {
          ...state,
          hold: state.active.type,
-         active: {
-            type: state.hold || state.queue[0],
-            position: [3, 0],
-            rotation: 0,
-         },
+         active: createTetrominoForDeployment(state.hold || state.queue[0]),
       };
       case INITIALIZE: return {
          ...state,
@@ -105,6 +103,14 @@ export default function reducer(state = initialState, action = {}) {
       };
       default: return state;
    }
+}
+
+export function createTetrominoForDeployment(type) {
+   return {
+      type,
+      position: [3, 0],
+      rotation: 0,
+   };
 }
 
 function merge({ grid, piece, type }) {

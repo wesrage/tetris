@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { emptyGrid } from '../reducer';
+import { createTetrominoForDeployment, emptyGrid } from '../reducer';
 import {
    deploy,
    drop,
@@ -14,6 +14,7 @@ import {
 import {
    DEPLOY,
    DROP,
+   GAME_OVER,
    LOCK,
    MOVE,
    ROTATE,
@@ -29,15 +30,39 @@ const mockStore = configureMockStore([thunk]);
 
 describe('action creators: deploy', () => {
    it('generates a new bag when queue is running low', () => {
-      const store = mockStore({ queue: Array(QUEUE_SIZE) });
+      const store = mockStore({
+         active: createTetrominoForDeployment('I'),
+         queue: ['I', 'O', 'J', 'L'],
+         grid: emptyGrid(HEIGHT, WIDTH),
+      });
       deploy()(store.dispatch, store.getState);
       expect(store.getActions()[0].bag.length).toEqual(7);
    });
 
    it('does not generate a new bag when queue is running low', () => {
-      const store = mockStore({ queue: Array(QUEUE_SIZE + 1) });
+      const store = mockStore({
+         active: createTetrominoForDeployment('I'),
+         queue: ['I', 'O', 'J', 'L', 'T'],
+         grid: emptyGrid(HEIGHT, WIDTH),
+      });
       deploy()(store.dispatch, store.getState);
       expect(store.getActions()[0].bag.length).toEqual(0);
+   });
+
+   it('triggers a game over if deployment causes overlap', () => {
+      const store = mockStore({
+         active: createTetrominoForDeployment('I'),
+         queue: ['I', 'J', 'T', 'L', 'O'],
+         grid: [
+            [null, null, null, null, null, null],
+            [null, null, 'xx', null, null, null],
+         ],
+      });
+      deploy()(store.dispatch, store.getState);
+      expect(store.getActions()).toEqual([
+         { type: DEPLOY, bag: [] },
+         { type: GAME_OVER },
+      ]);
    });
 });
 

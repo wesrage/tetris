@@ -22,11 +22,17 @@ export default class DropTimer extends Component {
       // TODO: Should we use the percentage completion of the previous interval
       // instead of starting from scratch?
       clearInterval(this.interval);
-      this.interval = setInterval(this.props.onTick, this.props.interval);
+      this.interval = setInterval(this.handleTick, this.props.interval);
    }
 
    componentWillUnmount() {
       clearInterval(this.interval);
+   }
+
+   handleTick = () => {
+      if (!this.props.paused) {
+         this.props.onTick();
+      }
    }
 
    render() {

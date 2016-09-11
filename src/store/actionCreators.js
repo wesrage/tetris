@@ -4,6 +4,7 @@ import {
    INITIALIZE,
    DROP,
    DEPLOY,
+   GAME_OVER,
    LOCK,
    MOVE,
    HOLD,
@@ -22,6 +23,10 @@ export const deploy = () => (dispatch, getState) => {
       ? generateBag()
       : [];
    dispatch({ type: DEPLOY, bag });
+   const { active, grid } = getState();
+   if (!isNoOverlap(grid, getGridPositions(active))) {
+      dispatch({ type: GAME_OVER });
+   }
 };
 
 export const drop = () => (dispatch, getState) => {

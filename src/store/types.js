@@ -1,6 +1,7 @@
 export const INITIALIZE = 'tetris/events/INITIALIZE';
 export const DROP = 'tetris/events/DROP';
 export const DEPLOY = 'tetris/events/DEPLOY';
+export const GAME_OVER = 'tetris/events/GAME_OVER';
 export const LOCK = 'tetris/events/LOCK';
 
 export const MOVE = 'tetris/controls/MOVE';

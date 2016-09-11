@@ -2,6 +2,7 @@ import {
    INITIALIZE,
    DROP,
    DEPLOY,
+   GAME_OVER,
    LOCK,
    MOVE,
    HOLD,
@@ -27,6 +28,7 @@ const initialState = {
    dropInterval: 1000,
    paused: false,
    fastDrop: false,
+   gameOver: false,
 };
 
 describe(DROP, () => {
@@ -68,6 +70,17 @@ describe(DEPLOY, () => {
             rotation: 0,
          },
          queue: ['L', 'O', 'Z', 'T'],
+      };
+      expect(reducer(initialState, action)).toEqual(expectedState);
+   });
+});
+
+describe(GAME_OVER, () => {
+   it('sets the gameOver state to true', () => {
+      const action = { type: GAME_OVER };
+      const expectedState = {
+         ...initialState,
+         gameOver: true,
       };
       expect(reducer(initialState, action)).toEqual(expectedState);
    });

@@ -16,6 +16,7 @@ class Game extends Component {
    static propTypes = {
       dropInterval: PropTypes.number.isRequired,
       fastDrop: PropTypes.bool.isRequired,
+      gameOver: PropTypes.bool.isRequired,
       grid: PropTypes.arrayOf(PropTypes.arrayOf(
          PropTypes.string,
       )).isRequired,
@@ -56,7 +57,7 @@ class Game extends Component {
             <KeyboardInput mappings={this.keyMappings}/>
             <DropTimer
                interval={this.props.fastDrop ? FAST_DROP_INTERVAL : this.props.dropInterval}
-               paused={this.props.paused}
+               paused={this.props.paused || this.props.gameOver}
                onTick={this.props.events.drop}
             />
             <Matrix grid={this.props.grid}>
@@ -72,6 +73,7 @@ class Game extends Component {
 const mapStateToProps = state => ({
    dropInterval: state.dropInterval,
    fastDrop: state.fastDrop,
+   gameOver: state.gameOver,
    grid: state.grid,
    paused: state.paused,
    piece: state.active,
