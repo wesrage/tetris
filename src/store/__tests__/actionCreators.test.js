@@ -16,6 +16,7 @@ import {
    DROP,
    LOCK,
    MOVE,
+   ROTATE,
    SEND_TO_BOTTOM,
 } from '../types';
 import {
@@ -111,7 +112,7 @@ describe('action creators: initialize', () => {
 });
 
 describe('action creators: move', () => {
-   it('should allow move to unoccupied space', () => {
+   it('should allow movement into unoccupied space', () => {
       const store = mockStore({
          active: {
             type: 'I',
@@ -135,7 +136,7 @@ describe('action creators: move', () => {
       ]);
    });
 
-   it('should disallow move to occupied space', () => {
+   it('should disallow movement into occupied space', () => {
       const store = mockStore({
          active: {
             type: 'I',
@@ -156,7 +157,7 @@ describe('action creators: move', () => {
       expect(store.getActions()).toEqual([]);
    });
 
-   it('should disallow move beyond grid edges', () => {
+   it('should disallow movement beyond grid edges', () => {
       const store1 = mockStore({
          active: {
             type: 'I',
@@ -182,8 +183,64 @@ describe('action creators: move', () => {
 
 describe('action creators: rotate', () => {
    it('should produce rotate action with desired direction', () => {
-      expect(rotate(true).counterClockwise).toBeTruthy();
-      expect(rotate(false).counterClockwise).toBeFalsy();
+      const store = mockStore({
+         active: {
+            type: 'J',
+            position: [6, 2],
+            rotation: 2,
+         },
+         grid: emptyGrid(HEIGHT, WIDTH),
+      });
+      rotate(false)(store.dispatch, store.getState);
+      rotate(true)(store.dispatch, store.getState);
+      expect(store.getActions()).toEqual([
+         { type: ROTATE, counterClockwise: false },
+         { type: ROTATE, counterClockwise: true },
+      ]);
+   });
+
+   it('should disallow rotation beyond grid edges', () => {
+      const store1 = mockStore({
+         active: {
+            type: 'I',
+            position: [-1, 2],
+            rotation: 3,
+         },
+         grid: emptyGrid(HEIGHT, WIDTH),
+      });
+      const store2 = mockStore({
+         active: {
+            type: 'I',
+            position: [8, 3],
+            rotation: 1,
+         },
+         grid: emptyGrid(HEIGHT, WIDTH),
+      });
+      rotate(false)(store1.dispatch, store1.getState);
+      rotate(true)(store2.dispatch, store2.getState);
+      expect(store1.getActions()).toEqual([]);
+      expect(store2.getActions()).toEqual([]);
+   });
+
+   it('should disallow rotation into occupied space', () => {
+      const store = mockStore({
+         active: {
+            type: 'I',
+            position: [1, 0],
+            rotation: 3,
+         },
+         grid: [
+            [null, null, null, null],
+            [null, null, null, 'xx'],
+            [null, 'xx', null, null],
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null],
+         ],
+      });
+      rotate(true)(store.dispatch, store.getState);
+      rotate(false)(store.dispatch, store.getState);
+      expect(store.getActions()).toEqual([]);
    });
 });
 

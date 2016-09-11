@@ -39,10 +39,15 @@ export const initialize = () => ({
    bag: generateBag(),
 });
 
-export const rotate = counterClockwise => ({
-   type: ROTATE,
-   counterClockwise: !!counterClockwise,
-});
+export const rotate = counterClockwise => (dispatch, getState) => {
+   const { active, grid } = getState();
+   if (isLegalRotation(active, grid, counterClockwise)) {
+      dispatch({
+         type: ROTATE,
+         counterClockwise,
+      });
+   }
+};
 
 export const move = right => (dispatch, getState) => {
    const { active, grid } = getState();
@@ -75,13 +80,26 @@ function isLegalMove(tetromino, grid, right) {
    const delta = (right) ? 1 : -1;
    const gridPositions = getGridPositions(tetromino);
    const nextGridPositions = gridPositions.map(([x, y]) => [x + delta, y]);
-   return nextGridPositions.every(([x, y]) =>
-      (x >= 0 && x < WIDTH && grid[y][x] === null));
+   return isNoOverlap(grid, nextGridPositions);
 }
 
 function isLegalDrop(tetromino, grid) {
    const gridPositions = getGridPositions(tetromino);
    const nextGridPositions = gridPositions.map(([x, y]) => [x, y + 1]);
-   return nextGridPositions.every(([x, y]) =>
-      (y < HEIGHT && grid[y][x] === null));
+   return isNoOverlap(grid, nextGridPositions);
+}
+
+function isLegalRotation(tetromino, grid, counterClockwise) {
+   const rotationDelta = (counterClockwise) ? 1 : 3;
+   const nextRotation = (tetromino.rotation + rotationDelta) % 4;
+   const nextGridPositions = getGridPositions({
+      ...tetromino,
+      rotation: nextRotation,
+   });
+   return isNoOverlap(grid, nextGridPositions);
+}
+
+function isNoOverlap(grid, positions) {
+   return positions.every(([x, y]) =>
+      x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT && grid[y][x] === null);
 }

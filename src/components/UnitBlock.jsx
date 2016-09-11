@@ -9,7 +9,7 @@ const UnitBlock = ({ absolute = false, filled = true, type, x, y }) => (
       position: absolute ? 'absolute' : 'static',
       top: y ? y * BLOCK_SIZE : 0,
       visibility: filled ? 'visible' : 'hidden',
-      width: 30,
+      width: BLOCK_SIZE,
    }}
       className={cx('unit-block', {
          [`unit-block--${type}`]: type !== undefined,
