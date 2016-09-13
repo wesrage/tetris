@@ -65,11 +65,11 @@ export default function reducer(state = initialState, action = {}) {
       };
       case LOCK: return {
          ...state,
-         grid: merge({
+         grid: clear(merge({
             grid: state.grid,
             piece: state.active,
             type: state.active.type,
-         }),
+         })),
       };
       case MOVE: {
          const delta = (action.right) ? 1 : -1;
@@ -119,4 +119,17 @@ function merge({ grid, piece, type }) {
       result[y][x] = type;
    });
    return result;
+}
+
+function clear(grid) {
+   const incompleteLines = grid.filter(isIncompleteLine);
+   const clearedLineCount = HEIGHT - incompleteLines;
+   return [
+      ...emptyGrid(clearedLineCount, WIDTH),
+      ...incompleteLines,
+   ];
+}
+
+function isIncompleteLine(row) {
+   return row.some(cell => cell === null);
 }
