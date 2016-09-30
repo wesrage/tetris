@@ -123,7 +123,7 @@ function merge({ grid, piece, type }) {
 
 function clear(grid) {
    const incompleteLines = grid.filter(isIncompleteLine);
-   const clearedLineCount = HEIGHT - incompleteLines;
+   const clearedLineCount = HEIGHT - incompleteLines.length;
    return [
       ...emptyGrid(clearedLineCount, WIDTH),
       ...incompleteLines,
