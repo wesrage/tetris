@@ -6,6 +6,7 @@ import {
    DropTimer,
    KeyboardInput,
    Matrix,
+   QueueDisplay,
    Tetromino,
 } from '../../components';
 import * as events from '../../store/actionCreators';
@@ -22,6 +23,7 @@ class Game extends Component {
       )).isRequired,
       piece: PropTypes.shape(TetrominoType),
       paused: PropTypes.bool.isRequired,
+      queue: PropTypes.arrayOf(PropTypes.string).isRequired,
       events: PropTypes.shape({
          deploy: PropTypes.func.isRequired,
          drop: PropTypes.func.isRequired,
@@ -52,7 +54,7 @@ class Game extends Component {
 
    render() {
       return (
-         <div>
+         <div className="game-root">
             <Helmet title="Tetris"/>
             <KeyboardInput mappings={this.keyMappings}/>
             <DropTimer
@@ -65,6 +67,7 @@ class Game extends Component {
                    <Tetromino {...this.props.piece}/>
                 }
             </Matrix>
+            <QueueDisplay queue={this.props.queue}/>
          </div>
       );
    }
@@ -77,6 +80,7 @@ const mapStateToProps = state => ({
    grid: state.grid,
    paused: state.paused,
    piece: state.active,
+   queue: state.queue,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -3,7 +3,7 @@ import TetrominoBlock from './TetrominoBlock';
 import { TetrominoType } from '../types';
 import { BLOCK_SIZE } from '../constants';
 
-const Tetromino = ({ type, rotation, position }) => (
+const Tetromino = ({ type, rotation = 0, position }) => (
    <div
       className="tetromino"
       style={{

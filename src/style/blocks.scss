@@ -1,3 +1,7 @@
+.game-root {
+    display: flex;
+}
+
 .unit-block {
    display: inline-block;
 
@@ -19,4 +23,11 @@
    border: 10px solid #aaa;
    display: inline-block;
    position: relative;
+}
+
+.queue-display {
+
+    .queue-display__piece {
+
+    }
 }
