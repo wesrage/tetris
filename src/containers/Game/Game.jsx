@@ -80,7 +80,7 @@ const mapStateToProps = state => ({
    grid: state.grid,
    paused: state.paused,
    piece: state.active,
-   queue: state.queue,
+   queue: state.queue.slice(0, 4),
 });
 
 const mapDispatchToProps = dispatch => ({

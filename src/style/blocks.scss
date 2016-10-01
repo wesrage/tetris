@@ -21,13 +21,18 @@
 .matrix {
    background-color: #222;
    border: 10px solid #aaa;
-   display: inline-block;
    position: relative;
 }
 
 .queue-display {
-
-    .queue-display__piece {
-
-    }
+   background-color: #222;
+   border-color: #aaa;
+   border-style: solid;
+   border-width: 10px 10px 10px 0;
+   position: relative;
+   .queue-display__piece {
+      position: relative;
+      height: 90px;
+      width: 120px;
+   }
 }
