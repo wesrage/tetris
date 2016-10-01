@@ -36,7 +36,7 @@ Matrix.propTypes = {
    grid: PropTypes.arrayOf(PropTypes.arrayOf(
       PropTypes.string,
    )),
-   children: PropTypes.element,
+   children: PropTypes.node,
 };
 
 Matrix.defaultProps = {

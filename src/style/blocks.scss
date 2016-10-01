@@ -5,16 +5,47 @@
 .unit-block {
    display: inline-block;
 
-   &.unit-block--I { background-color: cyan; }
-   &.unit-block--J { background-color: blue; }
-   &.unit-block--L { background-color: orange; }
-   &.unit-block--O { background-color: yellow; }
-   &.unit-block--S { background-color: green; }
-   &.unit-block--T { background-color: purple; }
-   &.unit-block--Z { background-color: red; }
+   &.unit-block--I {
+      background-color: cyan;
+      border-color: cyan;
+   }
+   &.unit-block--J {
+      background-color: blue;
+      border-color: blue;
+   }
+   &.unit-block--L {
+      background-color: orange;
+      border-color: orange;
+   }
+   &.unit-block--O {
+      background-color: yellow;
+      border-color: yellow;
+   }
+   &.unit-block--S {
+      background-color: green;
+      border-color: green;
+   }
+   &.unit-block--T {
+      background-color: purple;
+      border-color: purple;
+   }
+   &.unit-block--Z {
+      background-color: red;
+      border-color: red;
+   }
+
+   &.unit-block--outline {
+      background-color: transparent;
+      border-style: solid;
+      border-width: 1px;
+   }
 }
 
 .tetromino {
+   position: absolute;
+}
+
+.ghost-piece {
    position: absolute;
 }
 

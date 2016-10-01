@@ -4,20 +4,28 @@ import { bindActionCreators } from 'redux';
 import Helmet from 'react-helmet';
 import {
    DropTimer,
+   GhostPiece,
    KeyboardInput,
    Matrix,
    QueueDisplay,
    Tetromino,
 } from '../../components';
+import { getGridPositions } from '../../components/Tetromino';
 import * as events from '../../store/actionCreators';
+import { legalDropCount } from '../../store/actionCreators';
 import { TetrominoType } from '../../types';
-import { FAST_DROP_INTERVAL } from '../../constants';
+import {
+   FAST_DROP_INTERVAL,
+   HEIGHT,
+   WIDTH,
+} from '../../constants';
 
 class Game extends Component {
    static propTypes = {
       dropInterval: PropTypes.number.isRequired,
       fastDrop: PropTypes.bool.isRequired,
       gameOver: PropTypes.bool.isRequired,
+      ghostPosition: PropTypes.number,
       grid: PropTypes.arrayOf(PropTypes.arrayOf(
          PropTypes.string,
       )).isRequired,
@@ -52,6 +60,24 @@ class Game extends Component {
       },
    };
 
+   renderTetromino() {
+      return this.props.piece && (
+         <Tetromino {...this.props.piece}/>
+      );
+   }
+
+   renderGhostPiece() {
+      return this.props.piece && (
+         <GhostPiece
+            {...this.props.piece}
+            position={[
+               this.props.piece.position[0],
+               this.props.ghostPosition,
+            ]}
+         />
+      );
+   }
+
    render() {
       return (
          <div className="game-root">
@@ -63,9 +89,8 @@ class Game extends Component {
                onTick={this.props.events.drop}
             />
             <Matrix grid={this.props.grid}>
-                {this.props.piece &&
-                   <Tetromino {...this.props.piece}/>
-                }
+               {this.renderTetromino()}
+               {this.renderGhostPiece()}
             </Matrix>
             <QueueDisplay queue={this.props.queue}/>
          </div>
@@ -73,10 +98,26 @@ class Game extends Component {
    }
 }
 
+function calculateGhostPosition(tetromino, grid) {
+   const heightMap = Array(WIDTH).fill(HEIGHT);
+   grid.forEach((row, rowIndex) => {
+      if (rowIndex > tetromino.position[1]) {
+         row.forEach((cell, colIndex) => {
+            if (cell && heightMap[colIndex] === HEIGHT) {
+               heightMap[colIndex] = rowIndex;
+            }
+         });
+      }
+   });
+   const verticalDistances = getGridPositions(tetromino).map(([x, y]) => heightMap[x] - y);
+   return tetromino.position[1] + Math.max(0, Math.min(...verticalDistances) - 1);
+}
+
 const mapStateToProps = state => ({
    dropInterval: state.dropInterval,
    fastDrop: state.fastDrop,
    gameOver: state.gameOver,
+   ghostPosition: state.active ? calculateGhostPosition(state.active, state.grid) : null,
    grid: state.grid,
    paused: state.paused,
    piece: state.active,
