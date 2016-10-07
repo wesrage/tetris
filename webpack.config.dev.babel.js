@@ -16,6 +16,7 @@ export default {
          { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
          { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
          { test: /\.html$/, loader: 'file?name=[name].html' },
+         { test: /\.ttf$/, loader: 'url?limit=100000' },
       ],
    },
    plugins: [

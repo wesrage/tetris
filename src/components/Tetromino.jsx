@@ -72,6 +72,16 @@ export function getGridPositions(tetromino) {
       position.map((value, index) => value + tetromino.position[index]));
 }
 
+export function getDimensions(tetromino) {
+   const blockPositions = blockPositionMap[tetromino.type][tetromino.rotation];
+   const xPositions = blockPositions.map(([x]) => x);
+   const yPositions = blockPositions.map(([x, y]) => y);
+   return {
+      height: Math.max(...yPositions) - Math.min(...yPositions) + 1,
+      width: Math.max(...xPositions) - Math.min(...xPositions) + 1,
+   };
+}
+
 Tetromino.propTypes = TetrominoType;
 
 export default Tetromino;

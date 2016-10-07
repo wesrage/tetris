@@ -1,5 +1,10 @@
 $ghost-piece-opacity: 0.4;
 
+@font-face {
+   font-family: 'PressStart';
+   src: url(PrStart.ttf);
+}
+
 .game-root {
     display: flex;
 }
@@ -51,7 +56,7 @@ $ghost-piece-opacity: 0.4;
    }
 
    &.unit-block--outline {
-      background-color: rgba(255, 255, 255, 0.2);
+      opacity: 0.8;
       border-style: solid;
       border-width: 1px;
    }
@@ -71,15 +76,41 @@ $ghost-piece-opacity: 0.4;
    position: relative;
 }
 
-.queue-display {
+.info-panel {
    background-color: #222;
-   border-color: #aaa;
-   border-style: solid;
-   border-width: 10px 10px 10px 0;
-   position: relative;
-   .queue-display__piece {
+   width: 160px;
+
+   .queue-display {
+      border-color: #aaa;
+      border-style: solid;
+      border-width: 10px 10px 10px 0;
       position: relative;
-      height: 90px;
-      width: 120px;
+
+      .queue-display__piece {
+         height: 90px;
+         margin: 15px;
+         width: 120px;
+         position: relative;
+      }
+   }
+
+   .score-display {
+      border-color: #aaa;
+      border-style: solid;
+      border-width: 0 10px 10px 0;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 225px;
+      text-align: center;
+
+      .display-value {
+         flex: auto;
+         font-family: 'PressStart';
+         font-size: 1.5em;
+         // height: 50%;
+         // line-height: calc(225px / 2);
+         text-transform: uppercase;
+      }
    }
 }

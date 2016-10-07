@@ -8,11 +8,11 @@ import {
    KeyboardInput,
    Matrix,
    QueueDisplay,
+   ScoreDisplay,
    Tetromino,
 } from '../../components';
 import { getGridPositions } from '../../components/Tetromino';
 import * as events from '../../store/actionCreators';
-import { legalDropCount } from '../../store/actionCreators';
 import { TetrominoType } from '../../types';
 import {
    FAST_DROP_INTERVAL,
@@ -29,6 +29,7 @@ class Game extends Component {
       grid: PropTypes.arrayOf(PropTypes.arrayOf(
          PropTypes.string,
       )).isRequired,
+      level: PropTypes.number.isRequired,
       piece: PropTypes.shape(TetrominoType),
       paused: PropTypes.bool.isRequired,
       queue: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -40,6 +41,7 @@ class Game extends Component {
          rotate: PropTypes.func.isRequired,
          setFastDrop: PropTypes.func.isRequired,
       }).isRequired,
+      score: PropTypes.number.isRequired,
    }
 
    componentDidMount() {
@@ -92,7 +94,10 @@ class Game extends Component {
                {this.renderTetromino()}
                {this.renderGhostPiece()}
             </Matrix>
-            <QueueDisplay queue={this.props.queue}/>
+            <div className="info-panel">
+               <QueueDisplay queue={this.props.queue}/>
+               <ScoreDisplay level={this.props.level} score={this.props.score}/>
+            </div>
          </div>
       );
    }
@@ -119,9 +124,11 @@ const mapStateToProps = state => ({
    gameOver: state.gameOver,
    ghostPosition: state.active ? calculateGhostPosition(state.active, state.grid) : null,
    grid: state.grid,
+   level: state.level,
    paused: state.paused,
    piece: state.active,
    queue: state.queue.slice(0, 4),
+   score: state.score,
 });
 
 const mapDispatchToProps = dispatch => ({

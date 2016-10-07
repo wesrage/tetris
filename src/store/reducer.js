@@ -26,8 +26,10 @@ const initialState = {
    gameOver: false,
    grid: emptyGrid(HEIGHT, WIDTH),
    hold: null,
+   level: 0,
    paused: false,
    queue: [],
+   score: 0,
 };
 
 export default function reducer(state = initialState, action = {}) {
