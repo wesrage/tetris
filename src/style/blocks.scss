@@ -1,3 +1,5 @@
+$ghost-piece-opacity: 0.4;
+
 .game-root {
     display: flex;
 }
@@ -8,34 +10,48 @@
    &.unit-block--I {
       background-color: cyan;
       border-color: cyan;
+
+      &.unit-block--outline { background-color: rgba(cyan, $ghost-piece-opacity); }
    }
    &.unit-block--J {
       background-color: blue;
       border-color: blue;
+
+      &.unit-block--outline { background-color: rgba(blue, $ghost-piece-opacity); }
    }
    &.unit-block--L {
       background-color: orange;
       border-color: orange;
+
+      &.unit-block--outline { background-color: rgba(orange, $ghost-piece-opacity); }
    }
    &.unit-block--O {
       background-color: yellow;
       border-color: yellow;
+
+      &.unit-block--outline { background-color: rgba(yellow, $ghost-piece-opacity); }
    }
    &.unit-block--S {
       background-color: green;
       border-color: green;
+
+      &.unit-block--outline { background-color: rgba(green, $ghost-piece-opacity); }
    }
    &.unit-block--T {
       background-color: purple;
       border-color: purple;
+
+      &.unit-block--outline { background-color: rgba(purple, $ghost-piece-opacity); }
    }
    &.unit-block--Z {
       background-color: red;
       border-color: red;
+
+      &.unit-block--outline { background-color: rgba(red, $ghost-piece-opacity); }
    }
 
    &.unit-block--outline {
-      background-color: transparent;
+      background-color: rgba(255, 255, 255, 0.2);
       border-style: solid;
       border-width: 1px;
    }
