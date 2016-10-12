@@ -5,7 +5,7 @@ const ScoreDisplay = ({ lines, level, score }) => (
    <div className="score-display">
       <DisplayValue title="Level">{level}</DisplayValue>
       <DisplayValue title="Lines">{lines}</DisplayValue>
-      <DisplayValue title="Score">{score}</DisplayValue>
+      <DisplayValue title="Score">{Number(score).toLocaleString()}</DisplayValue>
    </div>
 );
 

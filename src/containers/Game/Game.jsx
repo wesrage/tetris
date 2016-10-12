@@ -12,7 +12,8 @@ import {
    Tetromino,
 } from '../../components';
 import { getGridPositions } from '../../components/Tetromino';
-import * as events from '../../store/actionCreators';
+import { calculateDropInterval } from '../../store/reducer';
+import * as events from '../../store/reducer';
 import { TetrominoType } from '../../types';
 import {
    FAST_DROP_INTERVAL,
@@ -124,7 +125,7 @@ function calculateGhostPosition(tetromino, grid) {
 }
 
 const mapStateToProps = state => ({
-   dropInterval: state.dropInterval,
+   dropInterval: calculateDropInterval(state),
    fastDrop: state.fastDrop,
    gameOver: state.gameOver,
    ghostPosition: state.active ? calculateGhostPosition(state.active, state.grid) : null,

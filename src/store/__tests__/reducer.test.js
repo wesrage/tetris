@@ -1,5 +1,6 @@
 import {
    INITIALIZE,
+   CLEAR,
    DROP,
    DEPLOY,
    GAME_OVER,
@@ -9,7 +10,7 @@ import {
    ROTATE,
    SET_FAST_DROP,
    // TOGGLE_PAUSE,
-} from '../types';
+} from '../reducer';
 import {
    HEIGHT,
    WIDTH,
@@ -25,11 +26,115 @@ const initialState = {
    grid: [],
    queue: ['T', 'L'],
    hold: null,
-   dropInterval: 1000,
+   dropPoints: 0,
    paused: false,
    fastDrop: false,
    gameOver: false,
+   lastClearWasTetris: false,
+   lines: 0,
+   score: 0,
 };
+
+describe(CLEAR, () => {
+   it('clears complete lines', () => {
+      const action = {
+         type: CLEAR,
+         lines: [1, 3, 4],
+      };
+      const modifiedInitialState = {
+         ...initialState,
+         grid: [
+            [null, null, null],
+            ['S', 'S', 'O'],
+            [null, 'I', null],
+            ['T', 'I', 'O'],
+            ['Z', 'S', 'J'],
+            [null, 'T', 'T'],
+         ],
+      };
+      const expectedState = {
+         ...modifiedInitialState,
+         grid: [
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, 'I', null],
+            [null, 'T', 'T'],
+         ],
+         lines: 3,
+         score: 500,
+      };
+      expect(reducer(modifiedInitialState, action)).toEqual(expectedState);
+   });
+
+   it('remembers when last clear was a Tetris', () => {
+      const action = {
+         type: CLEAR,
+         lines: [1, 2, 3, 4],
+      };
+      const modifiedInitialState = {
+         ...initialState,
+         grid: [
+            [null, null, null],
+            ['S', 'S', 'O'],
+            ['I', 'I', 'J'],
+            ['T', 'I', 'O'],
+            ['Z', 'S', 'J'],
+            [null, 'T', 'T'],
+         ],
+         lastClearWasTetris: false,
+      };
+      const expectedState = {
+         ...modifiedInitialState,
+         grid: [
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, 'T', 'T'],
+         ],
+         lines: 4,
+         score: 800,
+         lastClearWasTetris: true,
+      };
+      expect(reducer(modifiedInitialState, action)).toEqual(expectedState);
+   });
+
+   it('awards back-to-back Tetris clear bonus', () => {
+      const action = {
+         type: CLEAR,
+         lines: [1, 2, 3, 4],
+      };
+      const modifiedInitialState = {
+         ...initialState,
+         grid: [
+            [null, null, null],
+            ['S', 'S', 'O'],
+            ['I', 'I', 'J'],
+            ['T', 'I', 'O'],
+            ['Z', 'S', 'J'],
+            [null, 'T', 'T'],
+         ],
+         lastClearWasTetris: true,
+      };
+      const expectedState = {
+         ...modifiedInitialState,
+         grid: [
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+            [null, 'T', 'T'],
+         ],
+         lines: 4,
+         score: 1200,
+      };
+      expect(reducer(modifiedInitialState, action)).toEqual(expectedState);
+   });
+});
 
 describe(DROP, () => {
    it('increases y-position of active Tetromino by one', () => {

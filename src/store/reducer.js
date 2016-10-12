@@ -1,31 +1,37 @@
 import { getGridPositions } from '../components/Tetromino';
-import {
-   INITIALIZE,
-   DROP,
-   DEPLOY,
-   GAME_OVER,
-   LOCK,
-   MOVE,
-   HOLD,
-   ROTATE,
-   SET_FAST_DROP,
-} from './types';
+import { generateBag } from '../util/RandomGenerator';
 import {
    HEIGHT,
+   QUEUE_SIZE,
    WIDTH,
 } from '../constants';
+
+export const INITIALIZE = 'tetris/events/INITIALIZE';
+export const CLEAR = 'tetris/events/CLEAR';
+export const DROP = 'tetris/events/DROP';
+export const DEPLOY = 'tetris/events/DEPLOY';
+export const GAME_OVER = 'tetris/events/GAME_OVER';
+export const LOCK = 'tetris/events/LOCK';
+export const MOVE = 'tetris/controls/MOVE';
+export const HOLD = 'tetris/controls/HOLD';
+export const ROTATE = 'tetris/controls/ROTATE';
+export const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
+export const SET_FAST_DROP = 'tetris/controls/SET_FAST_DROP';
 
 export const emptyGrid = (h, w) =>
    [...Array(h).keys()].map(() => (
       [...Array(w).keys()].map(() => null)));
 
+const scores = [0, 100, 300, 500, 800, 1200];
+
 const initialState = {
    active: null,
-   dropInterval: 1000,
+   dropPoints: 0,
    fastDrop: false,
    gameOver: false,
    grid: emptyGrid(HEIGHT, WIDTH),
    hold: null,
+   lastClearWasTetris: false,
    lines: 0,
    paused: false,
    queue: [],
@@ -34,6 +40,24 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
    switch (action.type) {
+      case CLEAR: {
+         const level = getLevelFromLines(state.lines);
+         let basePoints = scores[action.lines.length];
+         if (state.lastClearWasTetris && action.lines.length === 4) {
+            basePoints = scores[5];
+         }
+         const points = basePoints * (level + 1);
+         return {
+            ...state,
+            grid: [
+               ...emptyGrid(action.lines.length, state.grid[0].length),
+               ...state.grid.filter(isIncompleteLine),
+            ],
+            lastClearWasTetris: action.lines.length === 4,
+            lines: state.lines + action.lines.length,
+            score: state.score + points,
+         };
+      }
       case DROP: {
          const [x, y] = state.active.position;
          return {
@@ -42,6 +66,7 @@ export default function reducer(state = initialState, action = {}) {
                ...state.active,
                position: [x, y + 1],
             },
+            dropPoints: state.dropPoints + (state.fastDrop ? 1 : 0),
          };
       }
       case DEPLOY: return {
@@ -51,6 +76,7 @@ export default function reducer(state = initialState, action = {}) {
             ...state.queue.slice(1),
             ...(action.bag || []),
          ],
+         dropPoints: 0,
       };
       case GAME_OVER: return {
          ...state,
@@ -67,11 +93,12 @@ export default function reducer(state = initialState, action = {}) {
       };
       case LOCK: return {
          ...state,
-         grid: clear(merge({
+         grid: merge({
             grid: state.grid,
             piece: state.active,
             type: state.active.type,
-         })),
+         }),
+         score: state.score + state.dropPoints,
       };
       case MOVE: {
          const delta = (action.right) ? 1 : -1;
@@ -107,12 +134,121 @@ export default function reducer(state = initialState, action = {}) {
    }
 }
 
+export const clear = () => (dispatch, getState) => {
+   const completeLineNumbers = getState().grid
+      .map((row, index) => ({ row, index }))
+      .filter(row => isCompleteLine(row.row))
+      .map(row => row.index);
+   if (completeLineNumbers.length > 0) {
+      dispatch({
+         type: CLEAR,
+         lines: completeLineNumbers,
+      });
+   }
+};
+
+export const deploy = () => (dispatch, getState) => {
+   const bag = (getState().queue.length <= QUEUE_SIZE)
+      ? generateBag()
+      : [];
+   dispatch({ type: DEPLOY, bag });
+   const { active, grid } = getState();
+   if (!isNoOverlap(grid, getGridPositions(active))) {
+      dispatch({ type: GAME_OVER });
+   }
+};
+
+export const drop = () => (dispatch, getState) => {
+   const { active, grid } = getState();
+   if (isLegalDrop(active, grid)) {
+      dispatch({ type: DROP });
+   } else {
+      dispatch({ type: LOCK });
+      dispatch(clear());
+      dispatch(deploy());
+   }
+};
+
+export const initialize = () => ({
+   type: INITIALIZE,
+   bag: generateBag(),
+});
+
+export const rotate = counterClockwise => (dispatch, getState) => {
+   const { active, grid } = getState();
+   if (isLegalRotation(active, grid, counterClockwise)) {
+      dispatch({
+         type: ROTATE,
+         counterClockwise,
+      });
+   }
+};
+
+export const move = right => (dispatch, getState) => {
+   const { active, grid } = getState();
+   if (isLegalMove(active, grid, right)) {
+      dispatch({
+         type: MOVE,
+         right,
+      });
+   }
+};
+
+export const hold = () => (dispatch, getState) => {
+   const hasHoldPiece = !!getState().hold;
+   if (!hasHoldPiece) {
+      dispatch(deploy());
+   }
+   dispatch({ type: HOLD });
+};
+
+export const sendToBottom = () => ({
+   type: SEND_TO_BOTTOM,
+});
+
+export const setFastDrop = fastDrop => ({
+   type: SET_FAST_DROP,
+   fastDrop,
+});
+
 export function createTetrominoForDeployment(type) {
    return {
       type,
       position: [3, 0],
       rotation: 0,
    };
+}
+
+export function getLevelFromLines(lines) {
+   return Math.floor(lines / 10);
+}
+
+function isLegalMove(tetromino, grid, right) {
+   const delta = (right) ? 1 : -1;
+   const gridPositions = getGridPositions(tetromino);
+   const nextGridPositions = gridPositions.map(([x, y]) => [x + delta, y]);
+   return isNoOverlap(grid, nextGridPositions);
+}
+
+function isLegalDrop(tetromino, grid) {
+   const gridPositions = getGridPositions(tetromino);
+   const nextGridPositions = gridPositions.map(([x, y]) => [x, y + 1]);
+   return isNoOverlap(grid, nextGridPositions);
+}
+
+function isLegalRotation(tetromino, grid, counterClockwise) {
+   const rotationDelta = (counterClockwise) ? 1 : 3;
+   const nextRotation = (tetromino.rotation + rotationDelta) % 4;
+   const nextGridPositions = getGridPositions({
+      ...tetromino,
+      rotation: nextRotation,
+   });
+   return isNoOverlap(grid, nextGridPositions);
+}
+
+function isNoOverlap(grid, positions) {
+   return positions.every(([x, y]) =>
+      x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT && grid[y][x] === null);
 }
 
 function merge({ grid, piece, type }) {
@@ -123,15 +259,26 @@ function merge({ grid, piece, type }) {
    return result;
 }
 
-function clear(grid) {
-   const incompleteLines = grid.filter(isIncompleteLine);
-   const clearedLineCount = HEIGHT - incompleteLines.length;
-   return [
-      ...emptyGrid(clearedLineCount, WIDTH),
-      ...incompleteLines,
-   ];
+function isCompleteLine(row) {
+   return row.every(cell => cell !== null);
 }
 
 function isIncompleteLine(row) {
-   return row.some(cell => cell === null);
+   return !isCompleteLine(row);
+}
+
+export function calculateDropInterval(state) {
+   const level = getLevelFromLines(state.lines);
+   if (level < 10) {
+      return [
+         800, 720, 630, 550, 470, 380, 300, 220, 130, 100,
+         80, 80, 80,
+         70, 70, 70,
+         50, 50, 50,
+      ][level];
+   }
+   if (level > 18 && level < 29) {
+      return 30;
+   }
+   return 20;
 }

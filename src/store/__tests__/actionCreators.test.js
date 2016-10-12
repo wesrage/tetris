@@ -1,16 +1,18 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { createTetrominoForDeployment, emptyGrid } from '../reducer';
 import {
+   clear,
+   createTetrominoForDeployment,
    deploy,
    drop,
+   emptyGrid,
    // hold,
    initialize,
    move,
    rotate,
    sendToBottom,
    setFastDrop,
-} from '../actionCreators';
+} from '../reducer';
 import {
    DEPLOY,
    DROP,
@@ -19,7 +21,7 @@ import {
    MOVE,
    ROTATE,
    SEND_TO_BOTTOM,
-} from '../types';
+} from '../reducer';
 import {
    HEIGHT,
    QUEUE_SIZE,
@@ -27,6 +29,23 @@ import {
 } from '../../constants';
 
 const mockStore = configureMockStore([thunk]);
+
+describe('action creators: clear', () => {
+   it('determines which lines are complete', () => {
+      const store = mockStore({
+         grid: [
+            [null, null, null],
+            ['S', 'S', 'O'],
+            [null, 'I', null],
+            ['T', 'I', 'O'],
+            ['Z', 'S', 'J'],
+            [null, 'T', 'T'],
+         ],
+      });
+      clear()(store.dispatch, store.getState);
+      expect(store.getActions()[0].lines).toEqual([1, 3, 4]);
+   });
+});
 
 describe('action creators: deploy', () => {
    it('generates a new bag when queue is running low', () => {
