@@ -26,7 +26,7 @@ const initialState = {
    gameOver: false,
    grid: emptyGrid(HEIGHT, WIDTH),
    hold: null,
-   level: 0,
+   lines: 0,
    paused: false,
    queue: [],
    score: 0,

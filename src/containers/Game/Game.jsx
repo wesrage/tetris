@@ -30,6 +30,7 @@ class Game extends Component {
          PropTypes.string,
       )).isRequired,
       level: PropTypes.number.isRequired,
+      lines: PropTypes.number.isRequired,
       piece: PropTypes.shape(TetrominoType),
       paused: PropTypes.bool.isRequired,
       queue: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -96,7 +97,11 @@ class Game extends Component {
             </Matrix>
             <div className="info-panel">
                <QueueDisplay queue={this.props.queue}/>
-               <ScoreDisplay level={this.props.level} score={this.props.score}/>
+               <ScoreDisplay
+                  level={this.props.level}
+                  lines={this.props.lines}
+                  score={this.props.score}
+               />
             </div>
          </div>
       );
@@ -124,7 +129,8 @@ const mapStateToProps = state => ({
    gameOver: state.gameOver,
    ghostPosition: state.active ? calculateGhostPosition(state.active, state.grid) : null,
    grid: state.grid,
-   level: state.level,
+   level: Math.floor(state.lines / 10),
+   lines: state.lines,
    paused: state.paused,
    piece: state.active,
    queue: state.queue.slice(0, 4),
