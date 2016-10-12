@@ -13,22 +13,49 @@ export default {
    },
    module: {
       loaders: [
-         { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' },
-         { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
-         { test: /\.html$/, loader: 'file?name=[name].html' },
-         { test: /\.ttf$/, loader: 'url?limit=100000' },
+         {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'babel',
+            query: {
+               presets: [
+                  ['es2015', { modules: false }],
+                  'react',
+                  'stage-0',
+               ],
+               env: {
+                  development: {
+                     presets: ['react-hmre'],
+                  },
+               },
+            },
+         }, {
+            test: /\.scss$/,
+            loaders: ['style', 'css', 'sass'],
+         }, {
+            test: /\.html$/,
+            loader: 'file',
+            query: {
+               name: '[name].html',
+            },
+         },
+         {
+            test: /\.ttf$/,
+            loader: 'url-loader',
+            query: {
+               limit: 100000,
+            },
+         },
       ],
    },
    plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),
    ],
-   progress: true,
+   // progress: true,
    resolve: {
-      modulesDirectories: [
-         'node_modules',
-      ],
-      extensions: ['', '.js', '.jsx'],
+      modules: ['node_modules'],
+      extensions: ['.js', '.jsx'],
    },
    watch: true,
 };

@@ -1,7 +1,7 @@
 {
-  "name": "react-template",
+  "name": "tetris",
   "version": "0.1.0",
-  "description": "React template featuring webpack with hot module replacement",
+  "description": "Web-based Tetris clone built with React and Redux",
   "license": "ISC",
   "scripts": {
     "start": "node index",
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/wesleywaldner/react-template.git"
+    "url": "https://bitbucket.org/wesleywaldner/tetris.git"
   },
   "devDependencies": {
-    "babel-core": "^6.7.2",
+    "babel-core": "^6.17.0",
     "babel-eslint": "^6.1.2",
     "babel-jest": "^15.0.0",
     "babel-loader": "^6.2.4",
@@ -28,7 +28,6 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.7.2",
-    "chai": "^3.5.0",
     "css-loader": "^0.23.1",
     "eslint": "^2.4.0",
     "eslint-config-airbnb": "^6.1.0",
@@ -37,13 +36,12 @@
     "express": "^4.13.4",
     "file-loader": "^0.8.5",
     "jest": "^15.1.1",
-    "mocha": "^2.4.5",
     "node-sass": "^3.8.0",
     "redux-mock-store": "^1.2.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.14",
+    "webpack": "2.1.0-beta.25",
     "webpack-dev-middleware": "^1.5.1",
     "webpack-hot-middleware": "^2.10.0"
   },
