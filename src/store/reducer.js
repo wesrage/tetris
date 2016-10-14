@@ -17,6 +17,7 @@ export const HOLD = 'tetris/controls/HOLD';
 export const ROTATE = 'tetris/controls/ROTATE';
 export const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
 export const SET_FAST_DROP = 'tetris/controls/SET_FAST_DROP';
+export const TOGGLE_PAUSE = 'tetris/controls/TOGGLE_PAUSE';
 
 export const emptyGrid = (h, w) =>
    [...Array(h).keys()].map(() => (
@@ -88,7 +89,7 @@ export default function reducer(state = initialState, action = {}) {
          active: createTetrominoForDeployment(state.hold || state.queue[0]),
       };
       case INITIALIZE: return {
-         ...state,
+         ...initialState,
          queue: action.bag,
       };
       case LOCK: return {
@@ -111,10 +112,10 @@ export default function reducer(state = initialState, action = {}) {
             },
          };
       }
-      // case TOGGLE_PAUSE: return {
-      //    ...state,
-      //    paused: !!state.paused,
-      // };
+      case TOGGLE_PAUSE: return {
+         ...state,
+         paused: (state.gameOver) ? state.paused : !state.paused,
+      };
       case ROTATE: return {
          ...state,
          active: {
@@ -209,6 +210,10 @@ export const sendToBottom = () => ({
 export const setFastDrop = fastDrop => ({
    type: SET_FAST_DROP,
    fastDrop,
+});
+
+export const togglePause = () => ({
+   type: TOGGLE_PAUSE,
 });
 
 export function createTetrominoForDeployment(type) {

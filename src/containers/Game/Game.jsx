@@ -4,9 +4,11 @@ import { bindActionCreators } from 'redux';
 import Helmet from 'react-helmet';
 import {
    DropTimer,
+   GameOverScreen,
    GhostPiece,
    KeyboardInput,
    Matrix,
+   PauseScreen,
    QueueDisplay,
    ScoreDisplay,
    Tetromino,
@@ -42,11 +44,16 @@ class Game extends Component {
          move: PropTypes.func.isRequired,
          rotate: PropTypes.func.isRequired,
          setFastDrop: PropTypes.func.isRequired,
+         togglePause: PropTypes.func.isRequired,
       }).isRequired,
       score: PropTypes.number.isRequired,
    }
 
    componentDidMount() {
+      this.startGame();
+   }
+
+   startGame = () => {
       this.props.events.initialize();
       this.props.events.deploy();
    }
@@ -57,6 +64,7 @@ class Game extends Component {
          ArrowLeft: this.props.events.move.bind(this, false),
          ArrowRight: this.props.events.move.bind(this, true),
          Control: this.props.events.rotate.bind(this, false),
+         p: this.props.events.togglePause,
          ' ': this.props.events.rotate.bind(this, true),
       },
       keyUp: {
@@ -92,10 +100,19 @@ class Game extends Component {
                paused={this.props.paused || this.props.gameOver}
                onTick={this.props.events.drop}
             />
-            <Matrix grid={this.props.grid}>
-               {this.renderTetromino()}
-               {this.renderGhostPiece()}
-            </Matrix>
+            <div className="game-panel">
+               {this.props.gameOver &&
+                  <GameOverScreen onRestart={this.startGame}/>
+               }
+               {this.props.paused ? (
+                  <PauseScreen/>
+               ) : (
+                  <Matrix grid={this.props.grid}>
+                     {this.renderTetromino()}
+                     {this.renderGhostPiece()}
+                  </Matrix>
+               )}
+            </div>
             <div className="info-panel">
                <QueueDisplay queue={this.props.queue}/>
                <ScoreDisplay

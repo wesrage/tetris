@@ -1,5 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
    devtool: 'cheap-module-eval-source-map',
@@ -30,27 +31,34 @@ export default {
                },
             },
          }, {
-            test: /\.scss$/,
-            loaders: ['style', 'css', 'sass'],
+            test: /\.s?css$/,
+            loader: ExtractTextPlugin.extract({
+               fallbackLoader: 'style-loader',
+               loader: ['css-loader', 'sass-loader'],
+            }),
          }, {
             test: /\.html$/,
             loader: 'file',
             query: {
                name: '[name].html',
             },
-         },
-         {
-            test: /\.ttf$/,
+         }, {
+            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
             loader: 'url-loader',
             query: {
-               limit: 100000,
+               limit: 10000,
+               mimeType: 'application/font-woff',
             },
+         }, {
+            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: 'url-loader',
          },
       ],
    },
    plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),
+      new ExtractTextPlugin('bundle.css'),
    ],
    // progress: true,
    resolve: {
