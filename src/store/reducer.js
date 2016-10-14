@@ -83,16 +83,19 @@ export default function reducer(state = initialState, action = {}) {
          ...state,
          gameOver: true,
       };
-      case HARD_DROP: return {
-         ...state,
-         active: {
-            ...state.active,
-            position: [
-               state.active.position[0],
-               calculateGhostPosition(state.active, state.grid),
-            ],
-         },
-      };
+      case HARD_DROP: {
+         const [x, y] = state.active.position;
+         const finalY = calculateGhostPosition(state.active, state.grid);
+         const deltaY = finalY - y;
+         return {
+            ...state,
+            active: {
+               ...state.active,
+               position: [x, finalY],
+            },
+            dropPoints: state.dropPoints + (2 * deltaY),
+         };
+      }
       case HOLD: return {
          ...state,
          hold: state.active.type,
