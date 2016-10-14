@@ -10,7 +10,7 @@ import {
    initialize,
    move,
    rotate,
-   sendToBottom,
+   hardDrop,
    setFastDrop,
 } from '../reducer';
 import {
@@ -20,7 +20,7 @@ import {
    LOCK,
    MOVE,
    ROTATE,
-   SEND_TO_BOTTOM,
+   HARD_DROP,
 } from '../reducer';
 import {
    HEIGHT,
@@ -288,9 +288,9 @@ describe('action creators: rotate', () => {
    });
 });
 
-describe('action creators: sendToBottom', () => {
+describe('action creators: hardDrop', () => {
    it('should produce corresponding action', () => {
-      expect(sendToBottom()).toEqual({ type: SEND_TO_BOTTOM });
+      expect(hardDrop()).toEqual({ type: HARD_DROP });
    });
 });
 

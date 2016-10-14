@@ -6,7 +6,10 @@ export default class KeyboardInput extends Component {
    }
 
    static defaultProps = {
-      mappings: {},
+      mappings: {
+         keyDown: {},
+         keyUp: {},
+      },
    }
 
    state = {
@@ -24,7 +27,7 @@ export default class KeyboardInput extends Component {
    }
 
    handleKeyDown = e => {
-      const mappings = this.props.mappings.keyDown;
+      const mappings = this.props.mappings.keyDown || {};
       if (e.key in mappings) {
          e.preventDefault();
          if (!this.state.pressed[e.key]) {
@@ -37,7 +40,7 @@ export default class KeyboardInput extends Component {
    }
 
    handleKeyUp = e => {
-      const mappings = this.props.mappings.keyUp;
+      const mappings = this.props.mappings.keyUp || {};
       this.setState({
          pressed: { [e.key]: undefined },
       });

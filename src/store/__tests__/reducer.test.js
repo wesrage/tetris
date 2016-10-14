@@ -319,7 +319,7 @@ describe(ROTATE, () => {
    });
 });
 
-// describe(SEND_TO_BOTTOM, () => {
+// describe(HARD_DROP, () => {
 //
 // });
 

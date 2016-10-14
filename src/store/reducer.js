@@ -15,7 +15,7 @@ export const LOCK = 'tetris/events/LOCK';
 export const MOVE = 'tetris/controls/MOVE';
 export const HOLD = 'tetris/controls/HOLD';
 export const ROTATE = 'tetris/controls/ROTATE';
-export const SEND_TO_BOTTOM = 'tetris/controls/SEND_TO_BOTTOM';
+export const HARD_DROP = 'tetris/controls/HARD_DROP';
 export const SET_FAST_DROP = 'tetris/controls/SET_FAST_DROP';
 export const TOGGLE_PAUSE = 'tetris/controls/TOGGLE_PAUSE';
 
@@ -83,6 +83,16 @@ export default function reducer(state = initialState, action = {}) {
          ...state,
          gameOver: true,
       };
+      case HARD_DROP: return {
+         ...state,
+         active: {
+            ...state.active,
+            position: [
+               state.active.position[0],
+               calculateGhostPosition(state.active, state.grid),
+            ],
+         },
+      };
       case HOLD: return {
          ...state,
          hold: state.active.type,
@@ -126,7 +136,6 @@ export default function reducer(state = initialState, action = {}) {
             ) % 4,
          },
       };
-      // case SEND_TO_BOTTOM: return state;
       case SET_FAST_DROP: return {
          ...state,
          fastDrop: action.fastDrop,
@@ -203,9 +212,10 @@ export const hold = () => (dispatch, getState) => {
    dispatch({ type: HOLD });
 };
 
-export const sendToBottom = () => ({
-   type: SEND_TO_BOTTOM,
-});
+export const hardDrop = () => dispatch => {
+   dispatch({ type: HARD_DROP });
+   dispatch(drop());
+};
 
 export const setFastDrop = fastDrop => ({
    type: SET_FAST_DROP,
@@ -286,4 +296,19 @@ export function calculateDropInterval(state) {
       return 30;
    }
    return 20;
+}
+
+export function calculateGhostPosition(tetromino, grid) {
+   const heightMap = Array(WIDTH).fill(HEIGHT);
+   grid.forEach((row, rowIndex) => {
+      if (rowIndex > tetromino.position[1]) {
+         row.forEach((cell, colIndex) => {
+            if (cell && heightMap[colIndex] === HEIGHT) {
+               heightMap[colIndex] = rowIndex;
+            }
+         });
+      }
+   });
+   const verticalDistances = getGridPositions(tetromino).map(([x, y]) => heightMap[x] - y);
+   return tetromino.position[1] + Math.max(0, Math.min(...verticalDistances) - 1);
 }

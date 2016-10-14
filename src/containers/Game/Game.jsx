@@ -14,8 +14,7 @@ import {
    ScoreDisplay,
    Tetromino,
 } from '../../components';
-import { getGridPositions } from '../../components/Tetromino';
-import { calculateDropInterval } from '../../store/reducer';
+import { calculateDropInterval, calculateGhostPosition } from '../../store/reducer';
 import * as events from '../../store/reducer';
 import { TetrominoType } from '../../types';
 import {
@@ -68,6 +67,7 @@ class Game extends Component {
          move: PropTypes.func.isRequired,
          rotate: PropTypes.func.isRequired,
          setFastDrop: PropTypes.func.isRequired,
+         hardDrop: PropTypes.func.isRequired,
          togglePause: PropTypes.func.isRequired,
       }).isRequired,
       score: PropTypes.number.isRequired,
@@ -87,12 +87,19 @@ class Game extends Component {
          ArrowDown: this.props.events.setFastDrop.bind(this, true),
          ArrowLeft: this.props.events.move.bind(this, false),
          ArrowRight: this.props.events.move.bind(this, true),
+         ArrowUp: this.props.events.hardDrop,
          Control: this.props.events.rotate.bind(this, false),
          p: this.props.events.togglePause,
          ' ': this.props.events.rotate.bind(this, true),
       },
       keyUp: {
          ArrowDown: this.props.events.setFastDrop.bind(this, false),
+      },
+   };
+
+   gameOverKeyMappings = {
+      keyDown: {
+         ' ': this.startGame,
       },
    };
 
@@ -132,10 +139,11 @@ class Game extends Component {
    )
 
    render() {
+      const keyMappings = this.props.gameOver ? this.gameOverKeyMappings : this.keyMappings;
       return (
          <GameRoot>
             <Helmet title="Tetris"/>
-            <KeyboardInput mappings={this.keyMappings}/>
+            <KeyboardInput mappings={keyMappings}/>
             <DropTimer
                interval={this.props.fastDrop ? FAST_DROP_INTERVAL : this.props.dropInterval}
                paused={this.props.paused || this.props.gameOver}
@@ -153,21 +161,6 @@ class Game extends Component {
          </GameRoot>
       );
    }
-}
-
-function calculateGhostPosition(tetromino, grid) {
-   const heightMap = Array(WIDTH).fill(HEIGHT);
-   grid.forEach((row, rowIndex) => {
-      if (rowIndex > tetromino.position[1]) {
-         row.forEach((cell, colIndex) => {
-            if (cell && heightMap[colIndex] === HEIGHT) {
-               heightMap[colIndex] = rowIndex;
-            }
-         });
-      }
-   });
-   const verticalDistances = getGridPositions(tetromino).map(([x, y]) => heightMap[x] - y);
-   return tetromino.position[1] + Math.max(0, Math.min(...verticalDistances) - 1);
 }
 
 const mapStateToProps = state => ({
