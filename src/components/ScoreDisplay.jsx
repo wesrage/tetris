@@ -1,12 +1,26 @@
 import React, { PropTypes } from 'react';
+import styled from 'styled-components';
 import DisplayValue from './DisplayValue';
+import { BORDER_SIZE } from '../constants';
+
+const Root = styled.div`
+   border-color: #aaa;
+   border-style: solid;
+   border-width: 0 ${BORDER_SIZE}px ${BORDER_SIZE}px 0;
+   display: flex;
+   flex-direction: column;
+   font-size: 1em;
+   height: 225px;
+   text-align: center;
+   text-transform: uppercase;
+`;
 
 const ScoreDisplay = ({ lines, level, score }) => (
-   <div className="score-display">
+   <Root>
       <DisplayValue title="Level">{level}</DisplayValue>
       <DisplayValue title="Lines">{lines}</DisplayValue>
       <DisplayValue title="Score">{Number(score).toLocaleString()}</DisplayValue>
-   </div>
+   </Root>
 );
 
 ScoreDisplay.propTypes = {

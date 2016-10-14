@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import {
    DropTimer,
    GameOverScreen,
@@ -18,10 +19,33 @@ import { calculateDropInterval } from '../../store/reducer';
 import * as events from '../../store/reducer';
 import { TetrominoType } from '../../types';
 import {
+   BLOCK_SIZE,
+   BORDER_SIZE,
    FAST_DROP_INTERVAL,
    HEIGHT,
    WIDTH,
 } from '../../constants';
+
+const GameRoot = styled.div`
+   color: #fff;
+   display: flex;
+   font-family: 'PressStart';
+   height: ${(HEIGHT * BLOCK_SIZE) + (BORDER_SIZE * 2)}px;
+`;
+
+const GamePanel = styled.div`
+   background-color: #222;
+   border: ${BORDER_SIZE}px solid #aaa;
+   font-size: 2em;
+   min-width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}px;
+   position: relative;
+   width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}px;
+`;
+
+const InfoPanel = styled.div`
+   background-color: #222;
+   width: ${(5 * BLOCK_SIZE) + BORDER_SIZE}px;
+`;
 
 class Game extends Component {
    static propTypes = {
@@ -90,9 +114,26 @@ class Game extends Component {
       );
    }
 
+   renderGamePanel = () => (
+      <GamePanel>
+         {this.props.gameOver && <GameOverScreen onRestart={this.startGame}/>}
+         {this.props.paused
+            ? <PauseScreen/>
+            : this.renderMatrix()
+         }
+      </GamePanel>
+   )
+
+   renderMatrix = () => (
+      <Matrix grid={this.props.grid}>
+         {this.renderTetromino()}
+         {this.renderGhostPiece()}
+      </Matrix>
+   )
+
    render() {
       return (
-         <div className="game-root">
+         <GameRoot>
             <Helmet title="Tetris"/>
             <KeyboardInput mappings={this.keyMappings}/>
             <DropTimer
@@ -100,28 +141,16 @@ class Game extends Component {
                paused={this.props.paused || this.props.gameOver}
                onTick={this.props.events.drop}
             />
-            <div className="game-panel">
-               {this.props.gameOver &&
-                  <GameOverScreen onRestart={this.startGame}/>
-               }
-               {this.props.paused ? (
-                  <PauseScreen/>
-               ) : (
-                  <Matrix grid={this.props.grid}>
-                     {this.renderTetromino()}
-                     {this.renderGhostPiece()}
-                  </Matrix>
-               )}
-            </div>
-            <div className="info-panel">
+            {this.renderGamePanel()}
+            <InfoPanel>
                <QueueDisplay queue={this.props.queue}/>
                <ScoreDisplay
                   level={this.props.level}
                   lines={this.props.lines}
                   score={this.props.score}
                />
-            </div>
-         </div>
+            </InfoPanel>
+         </GameRoot>
       );
    }
 }

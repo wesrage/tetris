@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import routes from './routes';
 
-import './style/blocks.scss';
+import './style/global.scss';
 
 const target = document.getElementById('root');
 

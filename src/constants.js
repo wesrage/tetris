@@ -1,5 +1,7 @@
 export const BLOCK_SIZE = 30;
+export const BORDER_SIZE = 10;
 export const FAST_DROP_INTERVAL = 50;
+export const GHOST_OPACITY = 0.4;
 
 export const HEIGHT = 22;
 export const WIDTH = 10;

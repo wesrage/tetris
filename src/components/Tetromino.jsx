@@ -1,16 +1,10 @@
 import React from 'react';
+import BaseTetromino from './BaseTetromino';
 import TetrominoBlock from './TetrominoBlock';
 import { TetrominoType } from '../types';
-import { BLOCK_SIZE } from '../constants';
 
 const Tetromino = ({ type, rotation = 0, position }) => (
-   <div
-      className="tetromino"
-      style={{
-         left: position[0] * BLOCK_SIZE,
-         top: position[1] * BLOCK_SIZE,
-      }}
-   >
+   <BaseTetromino position={position}>
       {blockPositionMap[type][rotation].map((blockPosition, index) => (
          <TetrominoBlock
             key={`active-block-${index}`}
@@ -18,7 +12,7 @@ const Tetromino = ({ type, rotation = 0, position }) => (
             position={blockPosition}
          />
       ))}
-   </div>
+   </BaseTetromino>
 );
 
 export const blockPositionMap = {
@@ -75,7 +69,7 @@ export function getGridPositions(tetromino) {
 export function getDimensions(tetromino) {
    const blockPositions = blockPositionMap[tetromino.type][tetromino.rotation];
    const xPositions = blockPositions.map(([x]) => x);
-   const yPositions = blockPositions.map(([x, y]) => y);
+   const yPositions = blockPositions.map(([, y]) => y);
    return {
       height: Math.max(...yPositions) - Math.min(...yPositions) + 1,
       width: Math.max(...xPositions) - Math.min(...xPositions) + 1,

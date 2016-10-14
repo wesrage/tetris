@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
-   devtool: 'cheap-module-eval-source-map',
+   devtool: 'cheap-module-inline-source-map',
    entry: [
       'webpack-hot-middleware/client',
       './src/index',
@@ -33,25 +33,21 @@ export default {
          }, {
             test: /\.s?css$/,
             loader: ExtractTextPlugin.extract({
-               fallbackLoader: 'style-loader',
-               loader: ['css-loader', 'sass-loader'],
+               fallbackLoader: 'style',
+               loader: ['css', 'sass'],
             }),
          }, {
             test: /\.html$/,
             loader: 'file',
             query: {
-               name: '[name].html',
+               name: '[name].[ext]',
             },
          }, {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader',
-            query: {
-               limit: 10000,
-               mimeType: 'application/font-woff',
-            },
+            loader: 'file',
          }, {
             test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader',
+            loader: 'file',
          },
       ],
    },
@@ -60,7 +56,6 @@ export default {
       new webpack.NoErrorsPlugin(),
       new ExtractTextPlugin('bundle.css'),
    ],
-   // progress: true,
    resolve: {
       modules: ['node_modules'],
       extensions: ['.js', '.jsx'],

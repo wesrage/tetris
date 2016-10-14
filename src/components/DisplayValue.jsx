@@ -1,10 +1,17 @@
 import React, { PropTypes } from 'react';
+import styled from 'styled-components';
+
+const Root = styled.div`
+   flex: auto;
+   line-height: 1.5em;
+   padding: 0.75em 0;
+`;
 
 const DisplayValue = ({ children, title }) => (
-   <div className="display-value">
-      <div className="display-value__title">{title}</div>
-      <div className="display-value__value">{children}</div>
-   </div>
+   <Root>
+      <div>{title}</div>
+      <div>{children}</div>
+   </Root>
 );
 
 DisplayValue.propTypes = {

@@ -1,17 +1,11 @@
 import React from 'react';
 import GhostBlock from './GhostBlock';
+import BaseTetromino from './BaseTetromino';
 import { blockPositionMap } from './Tetromino';
 import { TetrominoType } from '../types';
-import { BLOCK_SIZE } from '../constants';
 
 const GhostPiece = ({ type, rotation, position }) => (
-   <div
-      className="ghost-piece"
-      style={{
-         left: position[0] * BLOCK_SIZE,
-         top: position[1] * BLOCK_SIZE,
-      }}
-   >
+   <BaseTetromino position={position}>
       {blockPositionMap[type][rotation].map((blockPosition, index) => (
          <GhostBlock
             key={`active-block-${index}`}
@@ -19,7 +13,7 @@ const GhostPiece = ({ type, rotation, position }) => (
             position={blockPosition}
          />
       ))}
-   </div>
+   </BaseTetromino>
 );
 
 GhostPiece.propTypes = TetrominoType;
