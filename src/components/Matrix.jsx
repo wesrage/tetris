@@ -1,9 +1,14 @@
 import React, { PropTypes } from 'react';
+import styled from 'styled-components';
 import UnitBlock from './UnitBlock';
 import { BLOCK_SIZE } from '../constants';
 
+const MatrixRowRoot = styled.div`
+   height: ${BLOCK_SIZE}px;
+`;
+
 const MatrixRow = ({ cells, rowIndex }) => (
-   <div style={{ height: BLOCK_SIZE }}>
+   <MatrixRowRoot>
       {cells.map((cell, index) => (
          <UnitBlock
             key={`${rowIndex},${index}`}
@@ -11,7 +16,7 @@ const MatrixRow = ({ cells, rowIndex }) => (
             type={cell}
          />
       ))}
-   </div>
+   </MatrixRowRoot>
 );
 
 MatrixRow.propTypes = {
@@ -20,7 +25,7 @@ MatrixRow.propTypes = {
 };
 
 const Matrix = ({ grid, children }) => (
-   <div className="matrix">
+   <div>
       {grid.map((cells, index) => (
          <MatrixRow
             key={index}
