@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import {
+   BackgroundMusicPlayer,
    DropTimer,
    GameOverScreen,
    GhostPiece,
@@ -144,6 +145,7 @@ class Game extends Component {
          <GameRoot>
             <Helmet title="Tetris"/>
             <KeyboardInput mappings={keyMappings}/>
+            <BackgroundMusicPlayer/>
             <DropTimer
                interval={this.props.fastDrop ? FAST_DROP_INTERVAL : this.props.dropInterval}
                paused={this.props.paused || this.props.gameOver}
