@@ -1,11 +1,8 @@
 import path from 'path';
-import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
-   devtool: 'cheap-module-inline-source-map',
    entry: [
-      'webpack-hot-middleware/client',
       './src/index',
    ],
    output: {
@@ -24,11 +21,11 @@ export default {
                   'react',
                   'stage-0',
                ],
-               env: {
-                  development: {
-                     presets: ['react-hmre'],
-                  },
-               },
+               // env: {
+               //    development: {
+               //       presets: ['react-hmre'],
+               //    },
+               // },
             },
          }, {
             test: /\.s?css$/,
@@ -52,13 +49,10 @@ export default {
       ],
    },
    plugins: [
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin(),
       new ExtractTextPlugin('bundle.css'),
    ],
    resolve: {
       modules: ['node_modules'],
       extensions: ['.js', '.jsx'],
    },
-   watch: true,
 };

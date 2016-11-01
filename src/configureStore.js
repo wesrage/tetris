@@ -3,13 +3,13 @@ import thunkMiddleware from 'redux-thunk';
 import reducer from './store/reducer';
 
 export default function configureStore(initialState) {
+   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
    const store = createStore(
       reducer,
       initialState,
-      compose(
+      composeEnhancers(
          applyMiddleware(thunkMiddleware),
-         window.devToolsExtension && window.devToolsExtension()
-      )
+      ),
    );
 
    if (module.hot) {

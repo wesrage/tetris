@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import { Song, Sequencer, Synth } from 'react-music';
 
-const BackgroundMusicPlayer = ({ playing = false }) => (
+const BackgroundMusicPlayer = ({ playing = true }) => (
    <Song playing={playing} tempo={140}>
       <Sequencer resolution={16} bars={8}>
          <Synth
-            type="square"
+            type="triangle"
             steps={[
                [0, 4, 'e5'],
                [4, 2, 'b4'],
