@@ -4,7 +4,7 @@ import UnitBlock from './UnitBlock';
 import { BLOCK_SIZE } from '../constants';
 
 const MatrixRowRoot = styled.div`
-   height: ${BLOCK_SIZE}px;
+   height: ${BLOCK_SIZE}vh;
 `;
 
 const MatrixRow = ({ cells, rowIndex }) => (

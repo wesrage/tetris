@@ -22,7 +22,6 @@ import {
    BLOCK_SIZE,
    BORDER_SIZE,
    FAST_DROP_INTERVAL,
-   HEIGHT,
    WIDTH,
 } from '../../constants';
 
@@ -30,21 +29,21 @@ const GameRoot = styled.div`
    color: #fff;
    display: flex;
    font-family: 'PressStart';
-   height: ${(HEIGHT * BLOCK_SIZE) + (BORDER_SIZE * 2)}px;
+   height: 100vh;
 `;
 
 const GamePanel = styled.div`
    background-color: #222;
-   border: ${BORDER_SIZE}px solid #aaa;
-   font-size: 2em;
-   min-width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}px;
+   border: ${BORDER_SIZE}vh solid #aaa;
+   font-size: ${BLOCK_SIZE}vh;
+   min-width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}vh;
    position: relative;
-   width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}px;
+   width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}vh;
 `;
 
 const InfoPanel = styled.div`
    background-color: #222;
-   width: ${(5 * BLOCK_SIZE) + BORDER_SIZE}px;
+   width: ${(5 * BLOCK_SIZE) + BORDER_SIZE}vh;
 `;
 
 class Game extends Component {

@@ -7,8 +7,6 @@ const HTTP_PORT = 3000;
 
 const app = express();
 
-console.log(process.env.NODE_ENV);
-
 if (process.env.NODE_ENV !== 'production') {
    const compiler = webpack(webpackConfig);
    app.use(webpackDevMiddleware(compiler, {

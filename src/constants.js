@@ -1,5 +1,7 @@
-export const BLOCK_SIZE = 30;
-export const BORDER_SIZE = 10;
+// export const BLOCK_SIZE = 30;
+export const BLOCK_SIZE = 300 / 67;
+// export const BORDER_SIZE = 10;
+export const BORDER_SIZE = BLOCK_SIZE / 3;
 export const FAST_DROP_INTERVAL = 50;
 export const GHOST_OPACITY = 0.4;
 

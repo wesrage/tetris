@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import styled from 'styled-components';
+import { BLOCK_SIZE } from '../constants';
 
 const Root = styled.div`
    flex: auto;
-   line-height: 1.5em;
-   padding: 0.75em 0;
+   line-height: ${BLOCK_SIZE / 2}vh;
+   padding: ${BLOCK_SIZE / 4}vh 0;
 `;
 
 const DisplayValue = ({ children, title }) => (

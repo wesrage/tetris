@@ -6,15 +6,15 @@ import { BLOCK_SIZE, BORDER_SIZE } from '../constants';
 const Root = styled.div`
    border-color: #aaa;
    border-style: solid;
-   border-width: ${BORDER_SIZE}px ${BORDER_SIZE}px ${BORDER_SIZE}px 0;
+   border-width: ${BORDER_SIZE}vh ${BORDER_SIZE}vh ${BORDER_SIZE}vh 0;
    position: relative;
 `;
 
 const Piece = styled.div`
-   height: ${BLOCK_SIZE * 3}px;
-   margin: ${BLOCK_SIZE / 2}px;
+   height: ${BLOCK_SIZE * 3}vh;
+   margin: ${BLOCK_SIZE / 2}vh;
    position: relative;
-   width: ${BLOCK_SIZE * 4}px;
+   width: ${BLOCK_SIZE * 4}vh;
 `;
 
 const QueueDisplay = ({ queue }) => (

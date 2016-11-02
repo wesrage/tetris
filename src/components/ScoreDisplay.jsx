@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react';
 import styled from 'styled-components';
 import DisplayValue from './DisplayValue';
-import { BORDER_SIZE } from '../constants';
+import { BLOCK_SIZE, BORDER_SIZE, QUEUE_SIZE } from '../constants';
 
 const Root = styled.div`
    border-color: #aaa;
    border-style: solid;
-   border-width: 0 ${BORDER_SIZE}px ${BORDER_SIZE}px 0;
+   border-width: 0 ${BORDER_SIZE}vh ${BORDER_SIZE}vh 0;
    display: flex;
    flex-direction: column;
-   font-size: 1em;
-   height: 225px;
+   font-size: ${BLOCK_SIZE / 2}vh;
+   height: ${100 - (BLOCK_SIZE * 4 * QUEUE_SIZE) + (BORDER_SIZE * 2)}vh;
    text-align: center;
    text-transform: uppercase;
 `;

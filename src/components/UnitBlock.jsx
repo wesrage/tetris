@@ -40,12 +40,12 @@ const UnitBlockStyled = styled.div`
    border-style: ${props => (props.outlined ? 'solid' : 'none')};
    border-width: ${props => (props.outlined ? 1 : 0)}px;
    display: inline-block;
-   height: ${BLOCK_SIZE}px;
-   left: ${props => (props.x ? props.x * BLOCK_SIZE : 0)}px;
+   height: ${BLOCK_SIZE}vh;
+   left: ${props => (props.x ? props.x * BLOCK_SIZE : 0)}vh;
    opacity: ${props => (props.outlined ? 0.8 : 1)};
    position: ${props => (props.absolute ? 'absolute' : 'static')};
-   top: ${props => (props.y ? props.y * BLOCK_SIZE : 0)}px;
-   width: ${BLOCK_SIZE}px;
+   top: ${props => (props.y ? props.y * BLOCK_SIZE : 0)}vh;
+   width: ${BLOCK_SIZE}vh;
 `;
 
 const UnitBlock = ({ absolute = false, filled = true, outlined = false, type, x, y }) => (
