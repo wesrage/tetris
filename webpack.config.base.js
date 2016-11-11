@@ -21,11 +21,11 @@ export default {
                   'react',
                   'stage-0',
                ],
-               // env: {
-               //    development: {
-               //       presets: ['react-hmre'],
-               //    },
-               // },
+               env: {
+                  development: {
+                     presets: ['react-hmre'],
+                  },
+               },
             },
          }, {
             test: /\.s?css$/,
@@ -34,7 +34,7 @@ export default {
                loader: ['css', 'sass'],
             }),
          }, {
-            test: /\.html$/,
+            test: /\.(html|wav)$/,
             loader: 'file',
             query: {
                name: '[name].[ext]',
