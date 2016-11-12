@@ -283,7 +283,28 @@ describe('action creators: rotate', () => {
 
 describe('action creators: hardDrop', () => {
    it('should produce corresponding action', () => {
-      expect(hardDrop()).toEqual({ type: HARD_DROP });
+      const store = mockStore({
+         active: {
+            type: 'I',
+            position: [1, 0],
+            rotation: 1,
+         },
+         grid: [
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, null],
+            [null, null, null, 'xx'],
+            [null, 'xx', null, null],
+         ],
+         queue: ['J', 'I', 'O', 'Z', 'S', 'T'],
+      });
+      hardDrop()(store.dispatch, store.getState);
+      expect(store.getActions()).toEqual([
+         { type: HARD_DROP },
+         { type: LOCK },
+         { type: DEPLOY, bag: [] },
+      ]);
    });
 });
 

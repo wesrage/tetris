@@ -4,9 +4,9 @@
   "description": "Web-based Tetris clone built with React and Redux",
   "license": "ISC",
   "scripts": {
-    "start": "node index",
+    "dev": "node index",
     "build": "set NODE_ENV=production&& webpack --progress --colors",
-    "prod": "set NODE_ENV=production&& node index",
+    "start": "set NODE_ENV=production&& node index",
     "test": "jest --watch"
   },
   "jest": {

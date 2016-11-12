@@ -228,11 +228,20 @@ describe(INITIALIZE, () => {
    it('sets up a fresh queue', () => {
       const action = {
          type: INITIALIZE,
-         bag: ['T', 'L', 'Z', 'S', 'I', 'O', 'J'],
+         bag: ['T', 'L', 'S', 'Z', 'J', 'I', 'O'],
       };
       const expectedState = {
-         ...initialState,
-         queue: ['T', 'L', 'Z', 'S', 'I', 'O', 'J'],
+         active: null,
+         dropPoints: 0,
+         fastDrop: false,
+         gameOver: false,
+         grid: emptyGrid(HEIGHT, WIDTH),
+         hold: null,
+         lastClearWasTetris: false,
+         lines: 0,
+         paused: false,
+         queue: action.bag,
+         score: 0,
       };
       expect(reducer(initialState, action)).toEqual(expectedState);
    });
