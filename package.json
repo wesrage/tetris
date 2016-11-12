@@ -5,7 +5,7 @@
   "license": "ISC",
   "scripts": {
     "start": "node index",
-    "build": "webpack --progress --colors",
+    "build": "set NODE_ENV=production&& webpack --progress --colors",
     "prod": "set NODE_ENV=production&& node index",
     "test": "jest --watch"
   },

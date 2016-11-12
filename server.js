@@ -10,7 +10,7 @@ const app = express();
 if (process.env.NODE_ENV !== 'production') {
    const compiler = webpack(webpackConfig);
    app.use(webpackDevMiddleware(compiler, {
-      noInfo: false,
+      noInfo: true,
       stats: { colors: true },
    }));
    app.use(webpackHotMiddleware(compiler));
