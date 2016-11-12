@@ -14,16 +14,18 @@ import {
    QueueDisplay,
    ScoreDisplay,
    Tetromino,
-} from '../../components';
-import { calculateDropInterval, calculateGhostPosition } from '../../store/reducer';
-import * as events from '../../store/reducer';
-import { TetrominoType } from '../../types';
+} from '.';
+import { calculateDropInterval, calculateGhostPosition } from '../store/reducer';
+import * as events from '../store/reducer';
+import { TetrominoType } from '../types';
 import {
    BLOCK_SIZE,
    BORDER_SIZE,
    FAST_DROP_INTERVAL,
    WIDTH,
-} from '../../constants';
+} from '../constants';
+
+const PANEL_BG_COLOR = '#222';
 
 const GameRoot = styled.div`
    color: #fff;
@@ -33,7 +35,7 @@ const GameRoot = styled.div`
 `;
 
 const GamePanel = styled.div`
-   background-color: #222;
+   background-color: ${PANEL_BG_COLOR};
    border: ${BORDER_SIZE}vh solid #aaa;
    font-size: ${BLOCK_SIZE}vh;
    min-width: ${(WIDTH * BLOCK_SIZE) + (BORDER_SIZE * 2)}vh;
@@ -42,7 +44,7 @@ const GamePanel = styled.div`
 `;
 
 const InfoPanel = styled.div`
-   background-color: #222;
+   background-color: ${PANEL_BG_COLOR};
    width: ${(5 * BLOCK_SIZE) + BORDER_SIZE}vh;
 `;
 
@@ -121,7 +123,7 @@ class Game extends Component {
       );
    }
 
-   renderGamePanel = () => (
+   GamePanel = () => (
       <GamePanel>
          {this.props.gameOver && <GameOverScreen onRestart={this.startGame}/>}
          {this.props.paused
@@ -150,7 +152,7 @@ class Game extends Component {
                paused={this.props.paused || this.props.gameOver}
                onTick={this.props.events.drop}
             />
-            {this.renderGamePanel()}
+            <this.GamePanel/>
             <InfoPanel>
                <QueueDisplay queue={this.props.queue}/>
                <ScoreDisplay

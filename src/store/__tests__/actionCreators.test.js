@@ -6,7 +6,6 @@ import {
    deploy,
    drop,
    emptyGrid,
-   // hold,
    initialize,
    move,
    rotate,
@@ -142,12 +141,6 @@ describe('action creators: drop', () => {
       ]);
    });
 });
-
-// describe('action creators: hold', () => {
-//    it('', () => {
-//
-//    });
-// });
 
 describe('action creators: initialize', () => {
    it('should generate a full bag', () => {

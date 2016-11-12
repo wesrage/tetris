@@ -9,7 +9,6 @@ import {
    HOLD,
    ROTATE,
    SET_FAST_DROP,
-   // TOGGLE_PAUSE,
 } from '../reducer';
 import {
    HEIGHT,
@@ -289,10 +288,6 @@ describe(MOVE, () => {
    });
 });
 
-// describe(TOGGLE_PAUSE, () => {
-//
-// });
-
 describe(ROTATE, () => {
    it('decrements the active rotation state mod 4 if rotation is clockwise', () => {
       const action = { type: ROTATE };
@@ -318,10 +313,6 @@ describe(ROTATE, () => {
       expect(reducer(initialState, action)).toEqual(expectedState);
    });
 });
-
-// describe(HARD_DROP, () => {
-//
-// });
 
 describe(SET_FAST_DROP, () => {
    it('sets fastDrop to given action value', () => {

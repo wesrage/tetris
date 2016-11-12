@@ -150,8 +150,8 @@ export default function reducer(state = initialState, action = {}) {
 export const clear = () => (dispatch, getState) => {
    const completeLineNumbers = getState().grid
       .map((row, index) => ({ row, index }))
-      .filter(row => isCompleteLine(row.row))
-      .map(row => row.index);
+      .filter(({ row }) => isCompleteLine(row))
+      .map(({ index }) => index);
    if (completeLineNumbers.length > 0) {
       dispatch({
          type: CLEAR,

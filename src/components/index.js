@@ -1,5 +1,6 @@
 export BackgroundMusicPlayer from './BackgroundMusicPlayer';
 export DropTimer from './DropTimer';
+export Game from './Game';
 export GameOverScreen from './GameOverScreen';
 export GhostPiece from './GhostPiece';
 export KeyboardInput from './KeyboardInput';

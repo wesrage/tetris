@@ -1,7 +1,7 @@
-const PIECE_TYPES = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
+import { tetrominoTypes } from '../types';
 
 export function generateBag() {
-   return shuffle(PIECE_TYPES);
+   return shuffle(tetrominoTypes);
 }
 
 function shuffle(array) {
