@@ -4,8 +4,8 @@ import { BLOCK_SIZE } from '../constants';
 
 const Root = styled.div`
    flex: auto;
-   line-height: ${BLOCK_SIZE / 2}vh;
-   padding: ${BLOCK_SIZE / 4}vh 0;
+   line-height: ${BLOCK_SIZE * 2 / 3}vh;
+   padding: ${BLOCK_SIZE / 2}vh;
 `;
 
 const DisplayValue = ({ children, title }) => (

@@ -4,15 +4,21 @@ import Tetromino, { getDimensions } from './Tetromino';
 import { BLOCK_SIZE, BORDER_SIZE } from '../constants';
 
 const Root = styled.div`
+   display: flex;
+   flex-direction: column;
    border-color: #aaa;
    border-style: solid;
    border-width: ${BORDER_SIZE}vh ${BORDER_SIZE}vh ${BORDER_SIZE}vh 0;
+   height: ${100 * 2 / 3}vh;
    position: relative;
 `;
 
 const Piece = styled.div`
-   height: ${BLOCK_SIZE * 3}vh;
-   margin: ${BLOCK_SIZE / 2}vh;
+   align-items: center;
+   display: flex;
+   flex: auto;
+   justify-content: center;
+   margin: 0 ${BLOCK_SIZE / 2}vh;
    position: relative;
    width: ${BLOCK_SIZE * 4}vh;
 `;

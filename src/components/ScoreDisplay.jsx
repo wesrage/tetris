@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import styled from 'styled-components';
 import DisplayValue from './DisplayValue';
-import { BLOCK_SIZE, BORDER_SIZE, QUEUE_SIZE } from '../constants';
+import { BLOCK_SIZE, BORDER_SIZE } from '../constants';
 
 const Root = styled.div`
    border-color: #aaa;
@@ -10,7 +10,8 @@ const Root = styled.div`
    display: flex;
    flex-direction: column;
    font-size: ${BLOCK_SIZE / 2}vh;
-   height: ${100 - (BLOCK_SIZE * 4 * QUEUE_SIZE) + (BORDER_SIZE * 2)}vh;
+   height: ${100 / 3}vh;
+   justify-content: center;
    text-align: center;
    text-transform: uppercase;
 `;
