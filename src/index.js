@@ -5,7 +5,7 @@ import configureStore from './configureStore';
 import { Provider } from 'react-redux';
 import { Game } from './components';
 
-import './style/global.scss';
+import './style/global.css';
 
 const target = document.getElementById('root');
 

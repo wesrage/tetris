@@ -28,10 +28,10 @@ export default {
                },
             },
          }, {
-            test: /\.s?css$/,
+            test: /\.css$/,
             loader: ExtractTextPlugin.extract({
                fallbackLoader: 'style',
-               loader: ['css', 'sass'],
+               loader: ['css'],
             }),
          }, {
             test: /\.(html|wav)$/,
