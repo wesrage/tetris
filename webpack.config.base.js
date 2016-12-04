@@ -14,7 +14,7 @@ export default {
          {
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            loader: 'babel',
+            loader: 'babel-loader',
             query: {
                presets: [
                   ['es2015', { modules: false }],
@@ -30,21 +30,21 @@ export default {
          }, {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract({
-               fallbackLoader: 'style',
-               loader: ['css'],
+               fallbackLoader: 'style-loader',
+               loader: ['css-loader'],
             }),
          }, {
             test: /\.(html|wav)$/,
-            loader: 'file',
+            loader: 'file-loader',
             query: {
                name: '[name].[ext]',
             },
          }, {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'file',
+            loader: 'file-loader',
          }, {
             test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'file',
+            loader: 'file-loader',
          },
       ],
    },
@@ -54,5 +54,8 @@ export default {
    resolve: {
       modules: ['node_modules'],
       extensions: ['.js', '.jsx'],
+      alias: {
+         'styled-components$': 'styled-components/lib/index.js',
+      },
    },
 };

@@ -9,7 +9,7 @@ const offset = amount => steps =>
       ...step.slice(1),
    ]));
 
-const BackgroundMusicPlayer = ({ playing = false }) => (
+const BackgroundMusicPlayer = ({ playing }) => (
    <Song playing={playing} tempo={150}>
       <Sequencer resolution={16} bars={24}>
          <Synth

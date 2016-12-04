@@ -146,7 +146,7 @@ class Game extends Component {
          <GameRoot>
             <Helmet title="Tetris"/>
             <KeyboardInput mappings={keyMappings}/>
-            <BackgroundMusicPlayer/>
+            <BackgroundMusicPlayer playing={!this.props.paused && !this.props.gameOver}/>
             <DropTimer
                interval={this.props.fastDrop ? FAST_DROP_INTERVAL : this.props.dropInterval}
                paused={this.props.paused || this.props.gameOver}
